@@ -1,13 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Use and copying for commercial purposes 
+ * only with the author's permission
  */
 package com.mycompany.mavenservlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -21,12 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author kentyku
+ * @author Yuri Tveritin
+ * @version 1.0
  */
 @WebServlet(name = "MyServlet1", urlPatterns = {"/MyServlet1"})
 public class MyServlet1 extends HttpServlet {
     CountriesTableReader ctr;
-    private TreeMap <Integer, String> countriesList;
+//    private TreeMap <Integer, String> countriesList;
+    private List<String> countries=new ArrayList<String>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,7 +44,6 @@ public class MyServlet1 extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -49,16 +51,23 @@ public class MyServlet1 extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("");
-            out.println("<h1>Servlet MyServlet1 at " + request.getContextPath() + "</h1>");
-            out.println("<h1>Servlet MyServlet1 at " + request.getProtocol() + "</h1>");
+//            out.println("<h1>Servlet MyServlet1 at " + request.getContextPath() + "</h1>");
+//            out.println("<h1>Servlet MyServlet1 at " + request.getProtocol() + "</h1>");
+            
+            
+            //читаем из БД
             ctr=new CountriesTableReader();
-            ctr.readData();
-            countriesList=ctr.getCountriesList();
-            Set<Map.Entry<Integer, String>> countrynames = countriesList.entrySet();//(treemap: ключ=url, значение=site_id)
-            System.out.println(countrynames.size());
-            for (Map.Entry<Integer, String> itemcountry: countrynames) {
-                out.println("<h1>Hi"+itemcountry.getValue()+"</h1>");
-            }          
+//            ctr.readData();//читаем
+            
+
+
+            countries.addAll(ctr.readData());//возвращаем
+            //выводим на экран
+//            Set<Map.Entry<Integer, String>> countrynames = countriesList.entrySet();//(treemap: ключ=url, значение=site_id)            
+            for (String itemcountry: countries) {
+                out.println("<h1>"+itemcountry+"</h1>");
+            } 
+
             out.println("</body>");
             out.println("</html>");
         }

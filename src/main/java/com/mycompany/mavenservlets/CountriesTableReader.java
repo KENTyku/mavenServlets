@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Use and copying for commercial purposes
+ * only with the author's permission
  */
 package com.mycompany.mavenservlets;
 
@@ -10,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  *
@@ -19,17 +18,22 @@ import java.util.TreeMap;
 public class CountriesTableReader {
     private Statement stmt;
     private Connection connection;
-    private TreeMap <Integer, String> countriesList;
+//    private TreeMap <Integer, String> countriesList;
     private ResultSet rs;
-
+    private ArrayList<String> countriesArList=new ArrayList<String>();
+//   public ArrayList<String> temp=new ArrayList<String>();
     /**
      * Основной алгоритм работы нити
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.sql.SQLException
      */
 
-    public void readData() throws ClassNotFoundException, SQLException {        
+    public ArrayList<String> readData() throws ClassNotFoundException, SQLException {        
         connect();
-        readCountriesTable();
-        disconnect();          
+//        ArrayList<String> temp=new ArrayList<String>();
+        this.countriesArList.addAll(readCountriesTable());           
+        disconnect();
+        return this.countriesArList;
     }
 
     /**
@@ -77,18 +81,21 @@ public class CountriesTableReader {
      * @throws Exception
      */
 
-    public void readCountriesTable() throws SQLException {
-        this.countriesList = new TreeMap<>();
-        this.rs = this.stmt.executeQuery("SELECT idcountry, country FROM COUNTRY;");
+    private ArrayList<String> readCountriesTable() throws SQLException {
+//        this.countriesList = new TreeMap<>();
+//        this.countriesArList=new ArrayList<String>();
+//        ArrayList<String> temp=new ArrayList<String>();
+        this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY;");
         while(this.rs.next()){
-            this.countriesList.put(this.rs.getInt(1), this.rs.getString(2));//treemap: ключ=id страны, значение= название страны
+//            this.countriesList.put(this.rs.getInt(1), this.rs.getString(2));//treemap: ключ=id страны, значение= название страны
+            this.countriesArList.add(this.rs.getString(1));
         }
+        return this.countriesArList;
     }
-    /*
-    *Метод возвращающий коллекцию стран
-    */
-    public TreeMap <Integer, String> getCountriesList(){
-        return this.countriesList;
-    }
+//    /*
+//    *Метод возвращающий коллекцию стран
+//    */
+//    public TreeMap <Integer, String> getCountriesList(){
+//        return this.countriesList;
+//    }
 }
-
