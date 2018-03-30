@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "MyServlet1", urlPatterns = {"/MyServlet1"})
 public class MyServlet1 extends HttpServlet {
     CountriesTableReader ctr;
-//    private TreeMap <Integer, String> countriesList;
     private List<String> countries=new ArrayList<String>();
 
     /**
@@ -52,22 +51,16 @@ public class MyServlet1 extends HttpServlet {
             out.println("<body>");
             out.println("");
 //            out.println("<h1>Servlet MyServlet1 at " + request.getContextPath() + "</h1>");
-//            out.println("<h1>Servlet MyServlet1 at " + request.getProtocol() + "</h1>");
-            
+//            out.println("<h1>Servlet MyServlet1 at " + request.getProtocol() + "</h1>");            
             
             //читаем из БД
-            ctr=new CountriesTableReader();
-//            ctr.readData();//читаем
-            
-
-
-            countries.addAll(ctr.readData());//возвращаем
-            //выводим на экран
-//            Set<Map.Entry<Integer, String>> countrynames = countriesList.entrySet();//(treemap: ключ=url, значение=site_id)            
+            ctr=new CountriesTableReader();   
+            countries=ctr.readData();
+            //выводим на экран то что прочитали         
             for (String itemcountry: countries) {
                 out.println("<h1>"+itemcountry+"</h1>");
             } 
-
+            
             out.println("</body>");
             out.println("</html>");
         }

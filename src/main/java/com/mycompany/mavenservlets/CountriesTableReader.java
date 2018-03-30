@@ -23,15 +23,14 @@ public class CountriesTableReader {
     private ArrayList<String> countriesArList=new ArrayList<String>();
 //   public ArrayList<String> temp=new ArrayList<String>();
     /**
-     * Основной алгоритм работы нити
+     * Основной алгоритм работы 
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
      */
 
     public ArrayList<String> readData() throws ClassNotFoundException, SQLException {        
         connect();
-//        ArrayList<String> temp=new ArrayList<String>();
-        this.countriesArList.addAll(readCountriesTable());           
+        readCountriesTable();           
         disconnect();
         return this.countriesArList;
     }
@@ -41,11 +40,7 @@ public class CountriesTableReader {
      * @throws SQLException, ClassNotFoundException
      */
 
-//    private void connect() throws SQLException, ClassNotFoundException {
-//        Class.forName("org.sqlite.JDBC");
-//        this.connection = DriverManager.getConnection("jdbc:sqlite:GEEKBRAINS_INTERNSHIP_15_1_DB.db");
-//        this.stmt = connection.createStatement();
-//    }
+
     private void connect() throws ClassNotFoundException {
         try {
                 Class.forName("com.mysql.jdbc.Driver");//требуется чтобы 
@@ -76,21 +71,15 @@ public class CountriesTableReader {
     }
 
     /**
-     * Метод, осуществляющий запрос из БД ключевых слов по которым ведется
-     * парсинг html страниц
+     * Метод, осуществляющий запрос из БД 
      * @throws Exception
      */
 
-    private ArrayList<String> readCountriesTable() throws SQLException {
-//        this.countriesList = new TreeMap<>();
-//        this.countriesArList=new ArrayList<String>();
-//        ArrayList<String> temp=new ArrayList<String>();
+    private void readCountriesTable() throws SQLException {
         this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY;");
         while(this.rs.next()){
-//            this.countriesList.put(this.rs.getInt(1), this.rs.getString(2));//treemap: ключ=id страны, значение= название страны
             this.countriesArList.add(this.rs.getString(1));
-        }
-        return this.countriesArList;
+        }        
     }
 //    /*
 //    *Метод возвращающий коллекцию стран
