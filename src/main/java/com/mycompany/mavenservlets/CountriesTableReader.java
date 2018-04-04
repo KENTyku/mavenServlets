@@ -18,14 +18,14 @@ import java.util.*;
 public class CountriesTableReader {
     private Statement stmt;
     private Connection connection;
-//    private TreeMap <Integer, String> countriesList;
     private ResultSet rs;
     private ArrayList<String> countriesArList=new ArrayList<String>();
-//   public ArrayList<String> temp=new ArrayList<String>();
+
     /**
-     * Основной алгоритм работы 
+     * Основной метод (алгоритм работы) 
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
+     * @return 
      */
 
     public ArrayList<String> readData() throws ClassNotFoundException, SQLException {        
@@ -81,10 +81,4 @@ public class CountriesTableReader {
             this.countriesArList.add(this.rs.getString(1));
         }        
     }
-//    /*
-//    *Метод возвращающий коллекцию стран
-//    */
-//    public TreeMap <Integer, String> getCountriesList(){
-//        return this.countriesList;
-//    }
 }
