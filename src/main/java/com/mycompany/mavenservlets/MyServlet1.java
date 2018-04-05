@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "MyServlet1", urlPatterns = {"/MyServlet1"})
 public class MyServlet1 extends HttpServlet {
-    CountriesTableReader ctr;
-    private List<String> countries=new ArrayList<String>();
+    CountriesTableReader ctr;    
+    private ArrayList<Country> countriesList=new ArrayList<Country>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -55,10 +55,10 @@ public class MyServlet1 extends HttpServlet {
             
             //читаем из БД
             ctr=new CountriesTableReader();   
-            countries=ctr.readData();
+            countriesList=ctr.readData();
             //выводим на экран то что прочитали         
-            for (String itemcountry: countries) {
-                out.println("<h1>"+itemcountry+"</h1>");
+            for (Country itemcountry: countriesList) {
+                out.println("<h1>"+itemcountry.getName()+"</h1>");
             } 
             
             out.println("</body>");

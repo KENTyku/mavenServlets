@@ -20,6 +20,8 @@ public class CountriesTableReader {
     private Connection connection;
     private ResultSet rs;
     private ArrayList<String> countriesArList=new ArrayList<String>();
+    ArrayList<Country> countries=new ArrayList<Country>();
+    Country country;
 
     /**
      * Основной метод (алгоритм работы) 
@@ -28,11 +30,11 @@ public class CountriesTableReader {
      * @return 
      */
 
-    public ArrayList<String> readData() throws ClassNotFoundException, SQLException {        
+    public ArrayList<Country> readData() throws ClassNotFoundException, SQLException {        
         connect();
         readCountriesTable();           
         disconnect();
-        return this.countriesArList;
+        return this.countries;
     }
 
     /**
@@ -78,7 +80,12 @@ public class CountriesTableReader {
     private void readCountriesTable() throws SQLException {
         this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY;");
         while(this.rs.next()){
-            this.countriesArList.add(this.rs.getString(1));
+            country=new Country();
+            country.setName(this.rs.getString(1));
+//            country.setCity(city);
+//            this.countriesArList.add(this.rs.getString(1));
+            this.countries.add(country);
+            
         }        
     }
 }
