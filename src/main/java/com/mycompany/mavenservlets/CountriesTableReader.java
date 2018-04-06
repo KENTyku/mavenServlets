@@ -19,22 +19,37 @@ public class CountriesTableReader {
     private Statement stmt;
     private Connection connection;
     private ResultSet rs;
-    private ArrayList<String> countriesArList=new ArrayList<String>();
+//    private ArrayList<String> countriesArList=new ArrayList<String>();
     ArrayList<Country> countries=new ArrayList<Country>();
     Country country;
+    ArrayList<City> cities=new ArrayList<City>();
+    City city;
+    
 
     /**
-     * Основной метод (алгоритм работы) 
+     * Метод чтения списка стран из БД (алгоритм работы) 
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
      * @return 
      */
 
-    public ArrayList<Country> readData() throws ClassNotFoundException, SQLException {        
+    public ArrayList<Country> readCountries() throws ClassNotFoundException, SQLException {        
         connect();
         readCountriesTable();           
         disconnect();
         return this.countries;
+    }
+    
+    /**
+     * Метод чтения списка городов из БД
+     * 
+     */
+    
+    public ArrayList<City> readCities(String country) throws ClassNotFoundException, SQLException {
+        connect();
+        readCitiesTable(country);
+        disconnect();
+        return this.cities;
     }
 
     /**
@@ -54,10 +69,8 @@ public class CountriesTableReader {
                 connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase?useSSL=no&serverTimezone=UTC","root","123456");
                 stmt = connection.createStatement();
             }
-            catch (SQLException ex) {
-                System.out.println("***************");
-                System.out.println(ex);
-                System.out.println("***************");
+            catch (SQLException ex) {              
+                System.out.println(ex);                
             }
     }
 
@@ -87,5 +100,17 @@ public class CountriesTableReader {
             this.countries.add(country);
             
         }        
+    }
+
+    private void readCitiesTable(String country) throws SQLException {
+        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
+                + "inner join city on COUNTRY.idcountry=city.idcountry "
+                + "WHERE country='"+country+"';");
+        while(this.rs.next()){
+            city=new City();
+            city.setNameCity(this.rs.getString(1));
+            this.cities.add(city);            
+        }        
+        
     }
 }
