@@ -55,7 +55,7 @@ public class MyServlet1 extends HttpServlet {
             
             //читаем из БД
             ctr=new CountriesTableReader();   
-            countriesList=ctr.readData();
+            countriesList=ctr.readCountries();
             //выводим на экран то что прочитали         
             for (Country itemcountry: countriesList) {
                 out.println("<h1>"+itemcountry.getName()+"</h1>");
