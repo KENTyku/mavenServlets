@@ -51,11 +51,11 @@ public class SelectCountry extends HttpServlet {
             
             //читаем из БД список стран
             ctr=new CountriesTableReader();   
-            countriesList=ctr.readData();  
+            countriesList=ctr.readCountries();  
             
             //формируем  выпадающий список
             out.println("<form action=\"ShowCities\" method=\"post\">");
-            out.println("<p><select size=\""+(countriesList.size()+1)+"\" multiple name=\"hero[]\">");  
+            out.println("<p><select size=\""+(countriesList.size()+1)+"\" multiple name=\"country[]\">");  
             out.println("<option disabled>Выберите страну</option>");                    
             
             for (Country itemcountry: countriesList){
