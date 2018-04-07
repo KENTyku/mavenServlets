@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ShowCities3", urlPatterns = {"/ShowCities3"})
 public class ShowCities3 extends ShowCities2 {
-
+    CountriesTableReader3 ctr3;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,8 +38,18 @@ public class ShowCities3 extends ShowCities2 {
             String requestDB;
             requestDB=request.getParameter("country[]");//передача данных запроса
             //читаем из БД список городов для выбранной страны
-            ctr=new CountriesTableReader();   
-            cityList=ctr.readCities(requestDB);
+            ctr3=new CountriesTableReader3();   
+            cityList=ctr3.readLimitListCities(requestDB, 0);
+            
+            //подсчитывем количество необходимых страниц для вывода 5 элементов на страницу
+            int elements=ctr3.readSizeListCities(requestDB);
+            int pages=0;
+            if (elements%5==0) pages=elements/5;        
+            else pages=(elements/5)+1;
+            
+            
+        
+            
             
             out.println("<!DOCTYPE html>");
             out.println("<html>");
