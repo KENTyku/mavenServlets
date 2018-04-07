@@ -16,9 +16,9 @@ import java.util.*;
  * @author kentyku
  */
 public class CountriesTableReader {
-    private Statement stmt;
-    private Connection connection;
-    private ResultSet rs;
+    Statement stmt;
+    Connection connection;
+    ResultSet rs;
 //    private ArrayList<String> countriesArList=new ArrayList<String>();
     ArrayList<Country> countries=new ArrayList<Country>();
     Country country;
@@ -58,7 +58,7 @@ public class CountriesTableReader {
      */
 
 
-    private void connect() throws ClassNotFoundException {
+    void connect() throws ClassNotFoundException {
         try {
                 Class.forName("com.mysql.jdbc.Driver");//требуется чтобы 
                 /*
@@ -79,7 +79,7 @@ public class CountriesTableReader {
      * Метод, отвечающий за отключение от БД
      */
 
-    private void disconnect(){
+    void disconnect(){
         try {
             connection.close();
         } catch (SQLException e) {
@@ -91,7 +91,7 @@ public class CountriesTableReader {
      * @throws Exception
      */
 
-    private void readCountriesTable() throws SQLException {
+    void readCountriesTable() throws SQLException {
         this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY ORDER BY country;");
         while(this.rs.next()){
             country=new Country();
@@ -103,7 +103,7 @@ public class CountriesTableReader {
         }        
     }
 
-    private void readCitiesTable(String country) throws SQLException {
+    void readCitiesTable(String country) throws SQLException {
         this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
                 + "inner join city on COUNTRY.idcountry=city.idcountry "
                 + "WHERE country='"+country+"' ORDER BY city;");
