@@ -92,7 +92,7 @@ public class CountriesTableReader {
      */
 
     private void readCountriesTable() throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY;");
+        this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY ORDER BY country;");
         while(this.rs.next()){
             country=new Country();
             country.setName(this.rs.getString(1));
@@ -106,7 +106,7 @@ public class CountriesTableReader {
     private void readCitiesTable(String country) throws SQLException {
         this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
                 + "inner join city on COUNTRY.idcountry=city.idcountry "
-                + "WHERE country='"+country+"';");
+                + "WHERE country='"+country+"' ORDER BY city;");
         while(this.rs.next()){
             city=new City();
             city.setNameCity(this.rs.getString(1));
