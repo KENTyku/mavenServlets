@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kentyku
  */
-@WebServlet(name = "SelectCountry", urlPatterns = {"/SelectCountry"})
-public class SelectCountry extends HttpServlet {
+@WebServlet(name = "ShowCities2", urlPatterns = {"/ShowCities2"})
+public class ShowCities2 extends HttpServlet {
     CountriesTableReader ctr;    
-    private ArrayList<Country> countriesList=new ArrayList<Country>();
+    ArrayList<City> cityList=new ArrayList<City>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,31 +39,25 @@ public class SelectCountry extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            String requestDB;
+            requestDB=request.getParameter("country[]");//передача данных запроса
+            //читаем из БД список городов для выбранной страны
+            ctr=new CountriesTableReader();   
+            cityList=ctr.readCities(requestDB);
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SelectCountry</title>");            
+            out.println("<title>Servlet ShowCities2</title>");            
             out.println("</head>");
             out.println("<body>");
-//            out.println("<h1>Servlet SelectCountry at " + request.getContextPath() + "</h1>");
+//            out.println("<h1>Servlet ShowCities2 at " + request.getContextPath() + "</h1>");
             out.println("<br>");
-            out.println("<br>");
             
-            //читаем из БД список стран
-            ctr=new CountriesTableReader();   
-            countriesList=ctr.readCountries();  
-            
-            //формируем  выпадающий список
-            out.println("<form action=\"ShowCities\" method=\"post\">");
-            out.println("<p><select size=\""+(countriesList.size()+1)+"\" multiple name=\"country[]\">");  
-            out.println("<option disabled>Выберите страну</option>");                    
-            
-            for (Country itemcountry: countriesList){
-                out.println("<option value=\""+itemcountry.getName()+"\">"+itemcountry.getName()+"</option>");     
-            }                 
-            out.println("</select>");    
-            out.println("<input type=\"submit\" value=\"Выбрать\"></p>");    
-            out.println("</form>");
+             //выводим на экран то что прочитали         
+            for (City itemcity: cityList) {
+                out.println("<h1>"+itemcity.getNameCity()+"</h1>");
+            }
             out.println("</body>");
             out.println("</html>");
         }
@@ -84,9 +78,9 @@ public class SelectCountry extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SelectCountry.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(SelectCountry.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -104,9 +98,9 @@ public class SelectCountry extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SelectCountry.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(SelectCountry.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
