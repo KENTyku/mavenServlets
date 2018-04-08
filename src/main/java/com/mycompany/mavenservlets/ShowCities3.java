@@ -64,6 +64,9 @@ public class ShowCities3 extends ShowCities2 {
             for (City itemcity: cityList) {
                 out.println("<h1>"+itemcity.getNameCity()+"</h1>");
             }
+            out.println("<br>");
+            out.println("<input type=\"submit\" value=\"Назад\">"); 
+            out.println("<input type=\"submit\" value=\"Вперед\">"); 
             out.println("</body>");
             out.println("</html>");
         }
