@@ -39,7 +39,7 @@ public class ShowCities2 extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String requestDB;
+            String requestDB;//передаваемое выбранное название страны
             requestDB=request.getParameter("country[]");//передача данных запроса
             //читаем из БД список городов для выбранной страны
             ctr=new CountriesTableReader();   
