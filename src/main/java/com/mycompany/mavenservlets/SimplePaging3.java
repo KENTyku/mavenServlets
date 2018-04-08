@@ -52,14 +52,15 @@ public class SimplePaging3 extends SelectCountry2 {
             countriesList=ctr.readCountries();  
             
             //формируем  выпадающий список
-            out.println("<form action=\"ShowCities3\" method=\"post\">");
+            out.println("<form action=\"ShowCitiesNext3\" method=\"post\">");
             out.println("<p><select size=\""+(countriesList.size()+1)+"\" multiple name=\"country[]\">");  
             out.println("<option disabled>Выберите страну</option>");                    
             
             for (Country itemcountry: countriesList){
                 out.println("<option value=\""+itemcountry.getName()+"\">"+itemcountry.getName()+"</option>");     
             }                 
-            out.println("</select>");    
+            out.println("</select>"); 
+            out.println("<input name=\"delta\" type=\"hidden\" id=\"hidden\" value=\"0\">");
             out.println("<input type=\"submit\" value=\"Выбрать\"></p>");    
             out.println("</form>");
             out.println("</body>");
