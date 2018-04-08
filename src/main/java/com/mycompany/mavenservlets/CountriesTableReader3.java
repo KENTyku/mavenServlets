@@ -55,7 +55,12 @@ public class CountriesTableReader3 extends CountriesTableReader {
             sizeListCities=this.rs.getInt(1);                      
         }        
     }
-
+    /**
+     * Метод считывающий из БД ограниченный список городов в стране
+     * @param country
+     * @param limitShift
+     * @throws SQLException 
+     */
     private void readLimitListRequest(String country, int limitShift) throws SQLException {
         this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
                 + "inner join city on COUNTRY.idcountry=city.idcountry "

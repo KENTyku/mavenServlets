@@ -35,21 +35,17 @@ public class ShowCitiesNext3 extends ShowCities2 {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+        try (PrintWriter out = response.getWriter()) {            
             String requestDB=null;//передаваемое в запрос название страны
-            requestDB=request.getParameter("country[]");//передача данных запроса
+            requestDB=request.getParameter("country[]");//считывание данных запроса
             
             if(requestDB==null){
-                requestDB=request.getParameter("requestDB");//передача данных запроса
-            }
-            System.out.println("requsetDB="+requestDB);
+                requestDB=request.getParameter("requestDB");//считывание данных запроса
+            }            
             int delta;//смещение запрашиваемых значений для sql запроса limit
+                        
+            delta=Integer.parseInt(request.getParameter("delta"));//считывание данных запроса
             
-            
-            delta=Integer.parseInt(request.getParameter("delta"));
-            
-            System.out.println("delta="+delta);
             //читаем из БД список городов для выбранной страны со смещением delta sql команды limit
             ctr3=new CountriesTableReader3();   
             cityList=ctr3.readLimitListCities(requestDB, delta);       
@@ -69,7 +65,8 @@ public class ShowCitiesNext3 extends ShowCities2 {
             
             out.println("<div>");
             out.println("<div style=\"float: left;\">");
-            if (delta>0){
+            
+            if (delta>0){//условие показа кнопки Назад формы
                 //            формируем отправку данных по кнопке Назад
                 out.println("<form action=\"ShowCitiesNext3\" method=\"post\">");                    
                 out.println("<input name=\"requestDB\" type=\"hidden\" id=\"hidden\" value=\""+requestDB+"\">");
@@ -78,9 +75,10 @@ public class ShowCitiesNext3 extends ShowCities2 {
                 out.println("</form>");
             }
             
-            out.println("</div>");
+            out.println("</div>");            
             out.println("<div style=\"float: right;\"> ");
-            if (cityList.size()>4){
+            
+            if (cityList.size()>4){ //условие показа кнопки Вперед формы
     //            формируем отправку данных по кнопке Вперед
                 out.println("<form action=\"ShowCitiesNext3\" method=\"post\">");                    
                 out.println("<input name=\"requestDB\" type=\"hidden\" id=\"hidden\" value=\""+requestDB+"\">");
@@ -90,6 +88,7 @@ public class ShowCitiesNext3 extends ShowCities2 {
             }
             out.println("</div>");
             out.println("</div>");
+            
             if ((cityList.size()<=0) & (delta==0)) {
                 out.println("В БД нет ни одного города этой страны");
             } 
