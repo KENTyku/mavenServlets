@@ -6,6 +6,7 @@ package com.mycompany.showcontrieslist;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,6 +18,7 @@ import java.util.*;
  */
 public class CountriesTableReader {
     Statement stmt;
+    PreparedStatement pstmt;
     Connection connection;
     ResultSet rs;
 //    private ArrayList<String> countriesArList=new ArrayList<String>();
@@ -61,9 +63,16 @@ public class CountriesTableReader {
      * @param country 
      */
     private void readSizeListRequest(String country) throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT  count(city.city) FROM COUNTRY "
-                + "inner join city on COUNTRY.idcountry=city.idcountry "
-                + "WHERE country='"+country+"';");
+        //готовим запрос
+        this.pstmt=connection.prepareStatement("SELECT  count(city.city) "
+                + "FROM COUNTRY inner join city on COUNTRY.idcountry=city.idcountry "
+                + "WHERE country=?;");
+        pstmt.setString(1, country);
+        //выполняем запрос
+        rs=pstmt.executeQuery();
+//        this.rs = this.stmt.executeQuery("SELECT  count(city.city) FROM COUNTRY "
+//                + "inner join city on COUNTRY.idcountry=city.idcountry "
+//                + "WHERE country='"+country+"';");
         while(this.rs.next()){
             sizeListCities=this.rs.getInt(1);                      
         }        
@@ -75,9 +84,15 @@ public class CountriesTableReader {
      * @throws SQLException 
      */
     private void readLimitListRequest(String country, int limitShift) throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
+        this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
                 + "inner join city on COUNTRY.idcountry=city.idcountry "
-                + "WHERE country='"+country+"' ORDER BY city limit "+limitShift+",5;");
+                + "WHERE country=? ORDER BY city limit ?,5;");
+        pstmt.setString(1, country);
+        pstmt.setInt(2, limitShift);
+        rs=pstmt.executeQuery();
+//        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
+//                + "inner join city on COUNTRY.idcountry=city.idcountry "
+//                + "WHERE country='"+country+"' ORDER BY city limit "+limitShift+",5;");
         while(this.rs.next()){
             city=new City();
             city.setNameCity(this.rs.getString(1));
@@ -164,9 +179,16 @@ public class CountriesTableReader {
     }
 
     void readCitiesTable(String country) throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
+        //готовим запрос
+        this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
                 + "inner join city on COUNTRY.idcountry=city.idcountry "
-                + "WHERE country='"+country+"' ORDER BY city;");
+                + "WHERE country=? ORDER BY city;");
+        pstmt.setString(1, country);    
+        //выполняем запрос
+        rs=pstmt.executeQuery();
+//        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
+//                + "inner join city on COUNTRY.idcountry=city.idcountry "
+//                + "WHERE country='"+country+"' ORDER BY city;");
         while(this.rs.next()){
             city=new City();
             city.setNameCity(this.rs.getString(1));
