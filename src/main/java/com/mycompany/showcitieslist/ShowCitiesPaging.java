@@ -6,7 +6,7 @@ package com.mycompany.showcitieslist;
 
 import com.mycompany.showcitieslist.ShowCities;
 import com.mycompany.showcontrieslist.City;
-import com.mycompany.showcontrieslist.CountriesTableReader3;
+import com.mycompany.showcontrieslist.CountriesTableReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ShowCitiesPaging", urlPatterns = {"/ShowCitiesPaging"})
 public class ShowCitiesPaging extends ShowCities {
-    CountriesTableReader3 ctr3;
+    CountriesTableReader ctr3;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,7 +50,7 @@ public class ShowCitiesPaging extends ShowCities {
             delta=Integer.parseInt(request.getParameter("delta"));//считывание данных запроса
             
             //читаем из БД список городов для выбранной страны со смещением delta sql команды limit
-            ctr3=new CountriesTableReader3();   
+            ctr3=new CountriesTableReader();   
             cityList=ctr3.readLimitListCities(requestDB, delta);       
             
             out.println("<!DOCTYPE html>");
