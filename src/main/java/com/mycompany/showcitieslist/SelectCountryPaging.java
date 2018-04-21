@@ -2,8 +2,11 @@
  * Use and copying for commercial purposes
  * only with the author's permission
  */
-package com.mycompany.mavenservlets;
+package com.mycompany.showcitieslist;
 
+import com.mycompany.showcitieslist.SelectCountry;
+import com.mycompany.showcontrieslist.CountriesTableReader;
+import com.mycompany.showcontrieslist.Country;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -17,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kentyku
  */
-@WebServlet(name = "SimplePaging3", urlPatterns = {"/SimplePaging3"})
-public class SimplePaging3 extends SelectCountry2 {
+@WebServlet(name = "SelectCountryPaging", urlPatterns = {"/SelectCountryPaging"})
+public class SelectCountryPaging extends SelectCountry {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +43,10 @@ public class SimplePaging3 extends SelectCountry2 {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SelectCountry2</title>");            
+            out.println("<title>Servlet SelectCountry</title>");            
             out.println("</head>");
             out.println("<body>");
-//            out.println("<h1>Servlet SelectCountry2 at " + request.getContextPath() + "</h1>");
+//            out.println("<h1>Servlet SelectCountry at " + request.getContextPath() + "</h1>");
             out.println("<br>");
             out.println("<br>");
             
@@ -52,7 +55,7 @@ public class SimplePaging3 extends SelectCountry2 {
             countriesList=ctr.readCountries();  
             
             //формируем  выпадающий список
-            out.println("<form action=\"ShowCitiesNext3\" method=\"post\">");
+            out.println("<form action=\"ShowCitiesPaging\" method=\"post\">");
             out.println("<p><select size=\""+(countriesList.size()+1)+"\" multiple name=\"country[]\">");  
             out.println("<option disabled>Выберите страну</option>");                    
             

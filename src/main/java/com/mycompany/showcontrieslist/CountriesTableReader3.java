@@ -2,7 +2,7 @@
  * Use and copying for commercial purposes
  * only with the author's permission
  */
-package com.mycompany.mavenservlets;
+package com.mycompany.showcontrieslist;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

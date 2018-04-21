@@ -2,8 +2,11 @@
  * Use and copying for commercial purposes
  * only with the author's permission
  */
-package com.mycompany.mavenservlets;
+package com.mycompany.showcitieslist;
 
+import com.mycompany.showcitieslist.ShowCities;
+import com.mycompany.showcontrieslist.City;
+import com.mycompany.showcontrieslist.CountriesTableReader3;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -17,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kentyku
  */
-@WebServlet(name = "ShowCitiesNext3", urlPatterns = {"/ShowCitiesNext3"})
-public class ShowCitiesNext3 extends ShowCities2 {
+@WebServlet(name = "ShowCitiesPaging", urlPatterns = {"/ShowCitiesPaging"})
+public class ShowCitiesPaging extends ShowCities {
     CountriesTableReader3 ctr3;
 
     /**
@@ -53,7 +56,7 @@ public class ShowCitiesNext3 extends ShowCities2 {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ShowCities3</title>");            
+            out.println("<title>Servlet ShowCities</title>");            
             out.println("</head>");
             out.println("<body>");            
             
@@ -68,7 +71,7 @@ public class ShowCitiesNext3 extends ShowCities2 {
             
             if (delta>0){//условие показа кнопки Назад формы
                 //            формируем отправку данных по кнопке Назад
-                out.println("<form action=\"ShowCitiesNext3\" method=\"post\">");                    
+                out.println("<form action=\"ShowCitiesPaging\" method=\"post\">");                    
                 out.println("<input name=\"requestDB\" type=\"hidden\" id=\"hidden\" value=\""+requestDB+"\">");
                 out.println("<input name=\"delta\" type=\"hidden\" id=\"hidden\" value=\""+(delta-5)+"\">");
                 out.println("<input type=\"submit\" value=\"Назад\">");    
@@ -80,7 +83,7 @@ public class ShowCitiesNext3 extends ShowCities2 {
             
             if (cityList.size()>4){ //условие показа кнопки Вперед формы
     //            формируем отправку данных по кнопке Вперед
-                out.println("<form action=\"ShowCitiesNext3\" method=\"post\">");                    
+                out.println("<form action=\"ShowCitiesPaging\" method=\"post\">");                    
                 out.println("<input name=\"requestDB\" type=\"hidden\" id=\"hidden\" value=\""+requestDB+"\">");
                 out.println("<input name=\"delta\" type=\"hidden\" id=\"hidden\" value=\""+(delta+5)+"\">");
                 out.println("<input type=\"submit\" value=\"Вперед\">");    
@@ -94,7 +97,7 @@ public class ShowCitiesNext3 extends ShowCities2 {
             } 
             out.println("<br>");
             out.println("<br>");
-            out.println("<a href=\"SimplePaging3\" > Выбрать другую страну </a>");
+            out.println("<a href=\"SelectCountryPaging\" > Выбрать другую страну </a>");
             out.println("</body>");
             out.println("</html>");
         }

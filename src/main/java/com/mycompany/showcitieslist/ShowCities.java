@@ -2,8 +2,10 @@
  * Use and copying for commercial purposes
  * only with the author's permission
  */
-package com.mycompany.mavenservlets;
+package com.mycompany.showcitieslist;
 
+import com.mycompany.showcontrieslist.City;
+import com.mycompany.showcontrieslist.CountriesTableReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -20,10 +22,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kentyku
  */
-@WebServlet(name = "SelectCountry2", urlPatterns = {"/SelectCountry2"})
-public class SelectCountry2 extends HttpServlet {
+@WebServlet(name = "ShowCities", urlPatterns = {"/ShowCities"})
+public class ShowCities extends HttpServlet {
     CountriesTableReader ctr;    
-    ArrayList<Country> countriesList=new ArrayList<Country>();
+    ArrayList<City> cityList=new ArrayList<City>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,31 +41,25 @@ public class SelectCountry2 extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            String requestDB;//передаваемое выбранное название страны
+            requestDB=request.getParameter("country[]");//передача данных запроса
+            //читаем из БД список городов для выбранной страны
+            ctr=new CountriesTableReader();   
+            cityList=ctr.readCities(requestDB);
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SelectCountry2</title>");            
+            out.println("<title>Servlet ShowCities</title>");            
             out.println("</head>");
             out.println("<body>");
-//            out.println("<h1>Servlet SelectCountry2 at " + request.getContextPath() + "</h1>");
+//            out.println("<h1>Servlet ShowCities at " + request.getContextPath() + "</h1>");
             out.println("<br>");
-            out.println("<br>");
             
-            //читаем из БД список стран
-            ctr=new CountriesTableReader();   
-            countriesList=ctr.readCountries();  
-            
-            //формируем  выпадающий список
-            out.println("<form action=\"ShowCities2\" method=\"post\">");
-            out.println("<p><select size=\""+(countriesList.size()+1)+"\" multiple name=\"country[]\">");  
-            out.println("<option disabled>Выберите страну</option>");                    
-            
-            for (Country itemcountry: countriesList){
-                out.println("<option value=\""+itemcountry.getName()+"\">"+itemcountry.getName()+"</option>");     
-            }                 
-            out.println("</select>");    
-            out.println("<input type=\"submit\" value=\"Выбрать\"></p>");    
-            out.println("</form>");
+             //выводим на экран то что прочитали         
+            for (City itemcity: cityList) {
+                out.println("<h1>"+itemcity.getNameCity()+"</h1>");
+            }
             out.println("</body>");
             out.println("</html>");
         }
@@ -84,9 +80,9 @@ public class SelectCountry2 extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SelectCountry2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(SelectCountry2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -104,9 +100,9 @@ public class SelectCountry2 extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SelectCountry2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(SelectCountry2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCities.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

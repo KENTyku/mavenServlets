@@ -2,7 +2,7 @@
  * Use and copying for commercial purposes 
  * only with the author's permission
  */
-package com.mycompany.mavenservlets;
+package com.mycompany.showcontrieslist;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Yuri Tveritin
  * @version 1.0
  */
-@WebServlet(name = "MyServlet1", urlPatterns = {"/MyServlet1"})
-public class MyServlet1 extends HttpServlet {
+@WebServlet(name = "ShowCountries", urlPatterns = {"/ShowCountries"})
+public class ShowCountries extends HttpServlet {
     CountriesTableReader ctr;    
     private ArrayList<Country> countriesList=new ArrayList<Country>();
 
@@ -46,13 +46,11 @@ public class MyServlet1 extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet MyServlet1</title>");            
+            out.println("<title>ShowCountries</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("");
-//            out.println("<h1>Servlet MyServlet1 at " + request.getContextPath() + "</h1>");
-//            out.println("<h1>Servlet MyServlet1 at " + request.getProtocol() + "</h1>");            
-            
+
             //читаем из БД
             ctr=new CountriesTableReader();   
             countriesList=ctr.readCountries();
@@ -81,9 +79,9 @@ public class MyServlet1 extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MyServlet1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCountries.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(MyServlet1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCountries.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -101,9 +99,9 @@ public class MyServlet1 extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MyServlet1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCountries.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(MyServlet1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowCountries.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
