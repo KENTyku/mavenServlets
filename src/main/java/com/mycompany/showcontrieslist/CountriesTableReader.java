@@ -141,8 +141,8 @@ public class CountriesTableReader {
                 образом т.к. DriverManager.getConnection() ищет драйверы среди
                 загруженных классов, а не пытается загрузить их сам.
                 */
-//                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase?useSSL=no&serverTimezone=UTC","root","123456");
-                connection = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11231124?useSSL=no&serverTimezone=UTC","sql11231124","T7UI6DZqye");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase?useSSL=no&serverTimezone=UTC","root","123456");
+//                connection = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11231124?useSSL=no&serverTimezone=UTC","sql11231124","T7UI6DZqye");
                 stmt = connection.createStatement();
             }
             catch (SQLException ex) {              
@@ -195,5 +195,10 @@ public class CountriesTableReader {
             this.cities.add(city);            
         }        
         
+    }
+    
+    void createdb() throws ClassNotFoundException{
+        connect();                  
+        disconnect();
     }
 }
