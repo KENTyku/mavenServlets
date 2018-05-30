@@ -200,5 +200,54 @@ public class CountriesTableReader {
     void createdb() throws ClassNotFoundException{
         connect();                  
         disconnect();
+        /**
+         * 
+         * CREATE TABLE `mydatabase`.`city` (
+  `idcity` INT NOT NULL AUTO_INCREMENT,
+  `city` VARCHAR(45) NOT NULL,
+  `idcountry` INT NOT NULL,
+  PRIMARY KEY (`idcity`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+INSERT INTO `mydatabase`.`city` (`idcity`, `city`, `idcountry`) VALUES ('1', 'Izhevsk', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Moskow', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Perm', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Ufa', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Ryzan', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Saratov', '1');
+
+
+
+ALTER TABLE `mydatabase`.`city` 
+ADD INDEX `fk_idcountry_idx` (`idcountry` ASC);
+ALTER TABLE `mydatabase`.`city` 
+ADD CONSTRAINT `fk_idcountry`
+  FOREIGN KEY (`idcountry`)
+  REFERENCES `mydatabase`.`country` (`idcountry`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Barcelona', '2');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Vic', '2');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Madrid', '2');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Palma', '2');
+
+
+
+CREATE SCHEMA `countrydb` DEFAULT CHARACTER SET utf8 ;
+use countrydb;
+CREATE TABLE `country` (
+  `idcountry` INT NOT NULL AUTO_INCREMENT,
+  `country` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idcountry`),
+  UNIQUE INDEX `idcountry_UNIQUE` (`idcountry` ASC),
+  UNIQUE INDEX `country_UNIQUE` (`country` ASC));
+
+         * 
+         */
     }
 }
