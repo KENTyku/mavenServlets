@@ -126,6 +126,22 @@ public class CountriesTableReader {
         disconnect();
         return this.cities;
     }
+    
+    /**
+     * Метод поиска списка стран из БД
+     * 
+     * @param country
+     * @return 
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.sql.SQLException
+     */
+    
+    public ArrayList<City> searchCountry(String country) throws ClassNotFoundException, SQLException {
+        connect();
+        searchCountryDBRequest(country);
+        disconnect();
+        return this.cities;
+    }
 
     /**
      * Метод, отвечающий за подключение к БД
@@ -177,8 +193,35 @@ public class CountriesTableReader {
             
         }        
     }
-
+    
+    /**
+     * Метод, осуществляющий запрос из БД списка городов опредененной страны 
+     * 
+     */
     void readCitiesTable(String country) throws SQLException {
+        //готовим запрос
+        this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
+                + "inner join city on COUNTRY.idcountry=city.idcountry "
+                + "WHERE country=? ORDER BY city;");
+        pstmt.setString(1, country);    
+        //выполняем запрос
+        rs=pstmt.executeQuery();
+//        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
+//                + "inner join city on COUNTRY.idcountry=city.idcountry "
+//                + "WHERE country='"+country+"' ORDER BY city;");
+        while(this.rs.next()){
+            city=new City();
+            city.setNameCity(this.rs.getString(1));
+            this.cities.add(city);            
+        }        
+        
+    }
+    
+    /**
+     * Метод, осуществляющий запрос из БД списка стран по ключевому слову
+     * 
+     */
+     void searchCountryDBRequest(String country) throws SQLException {
         //готовим запрос
         this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
                 + "inner join city on COUNTRY.idcountry=city.idcountry "

@@ -2,9 +2,9 @@
  * Use and copying for commercial purposes
  * only with the author's permission
  */
-package com.mycompany.showcitieslist;
+package com.mycompany.select;
 
-import com.mycompany.showcitieslist.ShowCities;
+import com.mycompany.select.ShowCities;
 import com.mycompany.showcontrieslist.City;
 import com.mycompany.showcontrieslist.CountriesTableReader;
 import java.io.IOException;
