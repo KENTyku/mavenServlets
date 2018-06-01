@@ -52,7 +52,8 @@ public class ShowCountries extends HttpServlet {
             out.println("");
 
             //читаем из БД
-            ctr=new CountriesTableReader();   
+            ctr=new CountriesTableReader();
+//            ctr.createdb();
             countriesList=ctr.readCountries();
             //выводим на экран то что прочитали         
             for (Country itemcountry: countriesList) {

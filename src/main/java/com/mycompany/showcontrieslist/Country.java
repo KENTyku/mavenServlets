@@ -4,13 +4,15 @@
  */
 package com.mycompany.showcontrieslist;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author kentyku
  */
 public class Country {
     private String name;
-    private String city;
+    private ArrayList<City> cityList;
 
     /**
      * @return the name
@@ -27,20 +29,18 @@ public class Country {
     }
 
     /**
-     * @return the city
+     * @return the cityList
      */
-    public String getCity() {
-        return city;
+    public ArrayList<City> getCityList() {
+        return cityList;
     }
 
     /**
-     * @param city the city to set
+     * @param cityList the cityList to set
      */
-    public void setCity(String city) {
-        this.city = city;
-    }
-    
-    
+    public void setCityList(ArrayList<City> cityList) {
+        this.cityList = cityList;
+    }    
     
     
 }

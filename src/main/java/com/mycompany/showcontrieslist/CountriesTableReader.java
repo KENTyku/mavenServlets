@@ -142,6 +142,19 @@ public class CountriesTableReader {
         disconnect();
         return this.cities;
     }
+    
+    void searchCountryDBRequest(String request ) throws SQLException {
+        this.rs = this.stmt.executeQuery("SELECT country FROM mydatabase.COUNTRY WHERE country RLIKE '"+request+"' ORDER BY country");
+        //обрабатываем результат запроса
+        while(this.rs.next()){
+            country=new Country();
+            country.setName(this.rs.getString(1));
+//            country.setCity(city);
+//            this.countriesArList.add(this.rs.getString(1));
+            this.countries.add(country);
+            
+        }        
+    }
 
     /**
      * Метод, отвечающий за подключение к БД
@@ -157,8 +170,8 @@ public class CountriesTableReader {
                 образом т.к. DriverManager.getConnection() ищет драйверы среди
                 загруженных классов, а не пытается загрузить их сам.
                 */
-//                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase?useSSL=no&serverTimezone=UTC","root","123456");
-                connection = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11231124?useSSL=no&serverTimezone=UTC","sql11231124","T7UI6DZqye");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase?useSSL=no&serverTimezone=UTC","root","123456");
+//                connection = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11231124?useSSL=no&serverTimezone=UTC","sql11231124","T7UI6DZqye");
                 stmt = connection.createStatement();
             }
             catch (SQLException ex) {              
@@ -217,26 +230,57 @@ public class CountriesTableReader {
         
     }
     
-    /**
-     * Метод, осуществляющий запрос из БД списка стран по ключевому слову
-     * 
-     */
-     void searchCountryDBRequest(String country) throws SQLException {
-        //готовим запрос
-        this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
-                + "inner join city on COUNTRY.idcountry=city.idcountry "
-                + "WHERE country=? ORDER BY city;");
-        pstmt.setString(1, country);    
-        //выполняем запрос
-        rs=pstmt.executeQuery();
-//        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
-//                + "inner join city on COUNTRY.idcountry=city.idcountry "
-//                + "WHERE country='"+country+"' ORDER BY city;");
-        while(this.rs.next()){
-            city=new City();
-            city.setNameCity(this.rs.getString(1));
-            this.cities.add(city);            
-        }        
-        
+    void createdb() throws ClassNotFoundException{
+        connect();                  
+        disconnect();
+        /**
+         * 
+         * CREATE TABLE `mydatabase`.`city` (
+  `idcity` INT NOT NULL AUTO_INCREMENT,
+  `city` VARCHAR(45) NOT NULL,
+  `idcountry` INT NOT NULL,
+  PRIMARY KEY (`idcity`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+INSERT INTO `mydatabase`.`city` (`idcity`, `city`, `idcountry`) VALUES ('1', 'Izhevsk', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Moskow', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Perm', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Ufa', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Ryzan', '1');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Saratov', '1');
+
+
+
+ALTER TABLE `mydatabase`.`city` 
+ADD INDEX `fk_idcountry_idx` (`idcountry` ASC);
+ALTER TABLE `mydatabase`.`city` 
+ADD CONSTRAINT `fk_idcountry`
+  FOREIGN KEY (`idcountry`)
+  REFERENCES `mydatabase`.`country` (`idcountry`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Barcelona', '2');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Vic', '2');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Madrid', '2');
+INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Palma', '2');
+
+
+
+CREATE SCHEMA `countrydb` DEFAULT CHARACTER SET utf8 ;
+use countrydb;
+CREATE TABLE `country` (
+  `idcountry` INT NOT NULL AUTO_INCREMENT,
+  `country` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idcountry`),
+  UNIQUE INDEX `idcountry_UNIQUE` (`idcountry` ASC),
+  UNIQUE INDEX `country_UNIQUE` (`country` ASC));
+
+         * 
+         */
     }
 }

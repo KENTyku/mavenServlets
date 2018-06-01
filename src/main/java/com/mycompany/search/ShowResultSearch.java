@@ -40,6 +40,7 @@ public class ShowResultSearch extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String requestDB;
+        //обработка GET  запроса формы поиска
         requestDB=request.getParameter("country");
         ctr=new CountriesTableReader();
         cityList=ctr.searchCountry(requestDB);
@@ -49,11 +50,12 @@ public class ShowResultSearch extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ShowCities</title>");            
+            out.println("<title>ShowRelustSearch</title>");            
             out.println("</head>");
             out.println("<body>");
 //            out.println("<h1>Servlet ShowCities at " + request.getContextPath() + "</h1>");
             out.println("<br>");
+//            out.println(requestDB);
             
              //выводим на экран то что прочитали         
             for (City itemcity: cityList) {
