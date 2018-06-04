@@ -65,14 +65,12 @@ public class CountriesTableReader {
     private void readSizeListRequest(String country) throws SQLException {
         //готовим запрос
         this.pstmt=connection.prepareStatement("SELECT  count(city.city) "
-                + "FROM COUNTRY inner join city on COUNTRY.idcountry=city.idcountry "
+                + "FROM country inner join city on COUNTRY.idcountry=city.idcountry "
                 + "WHERE country=?;");
         pstmt.setString(1, country);
         //выполняем запрос
         rs=pstmt.executeQuery();
-//        this.rs = this.stmt.executeQuery("SELECT  count(city.city) FROM COUNTRY "
-//                + "inner join city on COUNTRY.idcountry=city.idcountry "
-//                + "WHERE country='"+country+"';");
+
         while(this.rs.next()){
             sizeListCities=this.rs.getInt(1);                      
         }        
@@ -84,15 +82,13 @@ public class CountriesTableReader {
      * @throws SQLException 
      */
     private void readLimitListRequest(String country, int limitShift) throws SQLException {
-        this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
-                + "inner join city on COUNTRY.idcountry=city.idcountry "
+        this.pstmt=connection.prepareStatement("SELECT  city.city FROM country "
+                + "inner join city on country.idcountry=city.idcountry "
                 + "WHERE country=? ORDER BY city limit ?,5;");
         pstmt.setString(1, country);
         pstmt.setInt(2, limitShift);
         rs=pstmt.executeQuery();
-//        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
-//                + "inner join city on COUNTRY.idcountry=city.idcountry "
-//                + "WHERE country='"+country+"' ORDER BY city limit "+limitShift+",5;");
+
         while(this.rs.next()){
             city=new City();
             city.setNameCity(this.rs.getString(1));
@@ -144,15 +140,28 @@ public class CountriesTableReader {
     }
     
     void searchCountryDBRequest(String request ) throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT country FROM mydatabase.COUNTRY WHERE country RLIKE '"+request+"' ORDER BY country");
+        this.rs = this.stmt.executeQuery("SELECT  country, city FROM country INNER JOIN city on country.idcountry=city.idcountry WHERE country RLIKE '"+request+"'ORDER BY country ;");
         //обрабатываем результат запроса
+        this.cities.clear();
+        this.countries.clear();
         while(this.rs.next()){
+            for(Country item:this.countries){
+                if (item.getName()==this.rs.getString(1)){
+                    City city=new City();
+                    city.setNameCity(this.rs.getString(2));                  
+                    item.getCityList().add(city); 
+                    
+                }
+            }
+           
             country=new Country();
-            country.setName(this.rs.getString(1));
-//            country.setCity(city);
-//            this.countriesArList.add(this.rs.getString(1));
+            country.setName(this.rs.getString(1));            
+            City city=new City();
+            city.setNameCity(this.rs.getString(2));
+            country.setCityList(cities);
+            country.getCityList().add(city);
             this.countries.add(country);
-            
+
         }        
     }
 
@@ -196,7 +205,7 @@ public class CountriesTableReader {
      */
 
     void readCountriesTable() throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT country FROM COUNTRY ORDER BY country;");
+        this.rs = this.stmt.executeQuery("SELECT country FROM country ORDER BY country;");
         while(this.rs.next()){
             country=new Country();
             country.setName(this.rs.getString(1));
@@ -213,15 +222,13 @@ public class CountriesTableReader {
      */
     void readCitiesTable(String country) throws SQLException {
         //готовим запрос
-        this.pstmt=connection.prepareStatement("SELECT  city.city FROM COUNTRY "
-                + "inner join city on COUNTRY.idcountry=city.idcountry "
+        this.pstmt=connection.prepareStatement("SELECT  city.city FROM country "
+                + "inner join city on country.idcountry=city.idcountry "
                 + "WHERE country=? ORDER BY city;");
         pstmt.setString(1, country);    
         //выполняем запрос
         rs=pstmt.executeQuery();
-//        this.rs = this.stmt.executeQuery("SELECT  city.city FROM COUNTRY "
-//                + "inner join city on COUNTRY.idcountry=city.idcountry "
-//                + "WHERE country='"+country+"' ORDER BY city;");
+
         while(this.rs.next()){
             city=new City();
             city.setNameCity(this.rs.getString(1));
