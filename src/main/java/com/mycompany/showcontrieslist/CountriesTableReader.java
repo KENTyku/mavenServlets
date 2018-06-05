@@ -132,11 +132,11 @@ public class CountriesTableReader {
      * @throws java.sql.SQLException
      */
     
-    public ArrayList<City> searchCountry(String country) throws ClassNotFoundException, SQLException {
+    public ArrayList<Country> searchCountry(String country) throws ClassNotFoundException, SQLException {
         connect();
         searchCountryDBRequest(country);
         disconnect();
-        return this.cities;
+        return this.countries;
     }
     
     void searchCountryDBRequest(String request ) throws SQLException {

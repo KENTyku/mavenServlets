@@ -7,6 +7,7 @@ package com.mycompany.search;
 
 import com.mycompany.showcontrieslist.City;
 import com.mycompany.showcontrieslist.CountriesTableReader;
+import com.mycompany.showcontrieslist.Country;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ShowResultSearch", urlPatterns = {"/ShowResultSearch"})
 public class ShowResultSearch extends HttpServlet {
     CountriesTableReader ctr;    
-    ArrayList<City> cityList=new ArrayList<City>();
+    ArrayList<Country> countryList=new ArrayList<Country>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,7 +44,7 @@ public class ShowResultSearch extends HttpServlet {
         //обработка GET  запроса формы поиска
         requestDB=request.getParameter("country");
         ctr=new CountriesTableReader();
-        cityList=ctr.searchCountry(requestDB);
+        countryList=ctr.searchCountry(requestDB);
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -58,8 +59,8 @@ public class ShowResultSearch extends HttpServlet {
 //            out.println(requestDB);
             
              //выводим на экран то что прочитали         
-            for (City itemcity: cityList) {
-                out.println("<h1>"+itemcity.getNameCity()+"</h1>");
+            for (Country itemcountry: countryList) {
+                out.println("<h1>"+itemcountry.getName()+"</h1>");
             }
             out.println("</body>");
             out.println("</html>");
