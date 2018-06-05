@@ -124,7 +124,7 @@ public class CountriesTableReader {
     }
     
     /**
-     * Метод поиска списка стран из БД
+     * Метод поиска списка городов (для стран, удовлетворяющих условию поиска) из БД
      * 
      * @param country
      * @return 
@@ -132,36 +132,25 @@ public class CountriesTableReader {
      * @throws java.sql.SQLException
      */
     
-    public ArrayList<Country> searchCountry(String country) throws ClassNotFoundException, SQLException {
+    public ArrayList<City> searchCitiesOfCountries(String country, int index) throws ClassNotFoundException, SQLException {
         connect();
-        searchCountryDBRequest(country);
+        searchCitiesOfCountriesDBRequest(country,index);
         disconnect();
-        return this.countries;
+        return this.cities;
     }
     
-    void searchCountryDBRequest(String request ) throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT  country, city FROM country INNER JOIN city on country.idcountry=city.idcountry WHERE country RLIKE '"+request+"'ORDER BY country ;");
+    void searchCitiesOfCountriesDBRequest(String request, int index) throws SQLException {
+        this.rs = this.stmt.executeQuery("SELECT  city FROM country "
+                + "INNER JOIN city on country.idcountry=city.idcountry "
+                + "WHERE country RLIKE '"+request+"'ORDER BY country "
+                        + "limit "+index+",5;");
         //обрабатываем результат запроса
         this.cities.clear();
-        this.countries.clear();
-        while(this.rs.next()){
-            for(Country item:this.countries){
-                if (item.getName()==this.rs.getString(1)){
-                    City city=new City();
-                    city.setNameCity(this.rs.getString(2));                  
-                    item.getCityList().add(city); 
-                    
-                }
-            }
-           
-            country=new Country();
-            country.setName(this.rs.getString(1));            
-            City city=new City();
-            city.setNameCity(this.rs.getString(2));
-            country.setCityList(cities);
-            country.getCityList().add(city);
-            this.countries.add(country);
-
+//        this.countries.clear();
+        while(this.rs.next()){                             
+            city=new City();
+            city.setNameCity(this.rs.getString(1));
+            this.cities.add(city);             
         }        
     }
 
