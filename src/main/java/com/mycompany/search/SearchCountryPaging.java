@@ -43,7 +43,7 @@ public class SearchCountryPaging extends HttpServlet {
 //            out.println("<h1>Servlet SearchCountryPaging at " + request.getContextPath() + "</h1>");
             out.println("<form action=\"ShowResultSearch\" method=\"POST\" >");
             out.println("<input name=\"country\">");
-            out.println("<input name=\"delta\" type=\"hidden\" id=\"hidden\" value=\"0\">");            
+            out.println("<input name=\"index\" type=\"hidden\" id=\"hidden\" value=\"0\">");            
              out.println("<input type=\"submit\" value=\"Поиск\">");   
             out.println("</form>");
             out.println("</body>");

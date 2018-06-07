@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.*;
 
 /**
- *
+ * Класс чтения из БД
  * @author kentyku
  */
 public class CountriesTableReader {
@@ -21,7 +21,6 @@ public class CountriesTableReader {
     PreparedStatement pstmt;
     Connection connection;
     ResultSet rs;
-//    private ArrayList<String> countriesArList=new ArrayList<String>();
     ArrayList<Country> countries=new ArrayList<Country>();
     Country country;
     ArrayList<City> cities=new ArrayList<City>();
@@ -44,16 +43,17 @@ public class CountriesTableReader {
     }
     
     /**
-     * Метод возвращающий лимитированный список городов в стране
+     * Метод возвращающий частичный список городов в стране (с определенного 
+     * индекса)
      * @param country
-     * @param limitShift
+     * @param index
      * @return
      * @throws ClassNotFoundException
      * @throws SQLException 
      */
-    public ArrayList<City> readLimitListCities(String country,int limitShift) throws ClassNotFoundException, SQLException {
+    public ArrayList<City> readLimitListCities(String country,int index) throws ClassNotFoundException, SQLException {
         connect();
-        readLimitListRequest(country,limitShift);
+        readLimitListRequest(country,index);
         disconnect();
         return this.cities;
     }
@@ -76,17 +76,18 @@ public class CountriesTableReader {
         }        
     }
     /**
-     * Метод считывающий из БД ограниченный список городов в стране
+     * Метод чтения из БД частичного списка городов в стране (с определенного 
+     * индекса) 
      * @param country
-     * @param limitShift
+     * @param index
      * @throws SQLException 
      */
-    private void readLimitListRequest(String country, int limitShift) throws SQLException {
+    private void readLimitListRequest(String country, int index) throws SQLException {
         this.pstmt=connection.prepareStatement("SELECT  city.city FROM country "
                 + "inner join city on country.idcountry=city.idcountry "
                 + "WHERE country=? ORDER BY city limit ?,5;");
         pstmt.setString(1, country);
-        pstmt.setInt(2, limitShift);
+        pstmt.setInt(2, index);
         rs=pstmt.executeQuery();
 
         while(this.rs.next()){
@@ -113,7 +114,10 @@ public class CountriesTableReader {
     
     /**
      * Метод чтения списка городов из БД
-     * 
+     * @param country
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException 
      */
     
     public ArrayList<City> readCities(String country) throws ClassNotFoundException, SQLException {
@@ -127,6 +131,7 @@ public class CountriesTableReader {
      * Метод поиска списка городов (для стран, удовлетворяющих условию поиска) из БД
      * 
      * @param country
+     * @param index
      * @return 
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
@@ -138,15 +143,23 @@ public class CountriesTableReader {
         disconnect();
         return this.cities;
     }
-    
+    /**
+     * Метод поиска списка городов (для стран, удовлетворяющих условию поиска) 
+     * из БД. Запрос выводит по пять элементов с определенного индекса
+     * @param request
+     * @param index
+     * @throws SQLException 
+     */
     void searchCitiesOfCountriesDBRequest(String request, int index) throws SQLException {
-        this.rs = this.stmt.executeQuery("SELECT  city FROM country "
+        this.pstmt=connection.prepareStatement("SELECT  city FROM country "
                 + "INNER JOIN city on country.idcountry=city.idcountry "
-                + "WHERE country RLIKE '"+request+"'ORDER BY country "
-                        + "limit "+index+",5;");
+                + "WHERE country RLIKE ? ORDER BY country "
+                        + "limit ?,5;");
+        pstmt.setString(1, request);
+        pstmt.setInt(2, index);
+        rs=pstmt.executeQuery();
         //обрабатываем результат запроса
         this.cities.clear();
-//        this.countries.clear();
         while(this.rs.next()){                             
             city=new City();
             city.setNameCity(this.rs.getString(1));
@@ -189,7 +202,7 @@ public class CountriesTableReader {
     }
 
     /**
-     * Метод, осуществляющий запрос из БД 
+     * Метод, считывающий из БД список стран
      * @throws Exception
      */
 
@@ -198,8 +211,6 @@ public class CountriesTableReader {
         while(this.rs.next()){
             country=new Country();
             country.setName(this.rs.getString(1));
-//            country.setCity(city);
-//            this.countriesArList.add(this.rs.getString(1));
             this.countries.add(country);
             
         }        
@@ -207,7 +218,8 @@ public class CountriesTableReader {
     
     /**
      * Метод, осуществляющий запрос из БД списка городов опредененной страны 
-     * 
+     * @param country
+     * @throws SQLException 
      */
     void readCitiesTable(String country) throws SQLException {
         //готовим запрос
@@ -224,59 +236,5 @@ public class CountriesTableReader {
             this.cities.add(city);            
         }        
         
-    }
-    
-    void createdb() throws ClassNotFoundException{
-        connect();                  
-        disconnect();
-        /**
-         * 
-         * CREATE TABLE `mydatabase`.`city` (
-  `idcity` INT NOT NULL AUTO_INCREMENT,
-  `city` VARCHAR(45) NOT NULL,
-  `idcountry` INT NOT NULL,
-  PRIMARY KEY (`idcity`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
-INSERT INTO `mydatabase`.`city` (`idcity`, `city`, `idcountry`) VALUES ('1', 'Izhevsk', '1');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Moskow', '1');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Perm', '1');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Ufa', '1');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Ryzan', '1');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Saratov', '1');
-
-
-
-ALTER TABLE `mydatabase`.`city` 
-ADD INDEX `fk_idcountry_idx` (`idcountry` ASC);
-ALTER TABLE `mydatabase`.`city` 
-ADD CONSTRAINT `fk_idcountry`
-  FOREIGN KEY (`idcountry`)
-  REFERENCES `mydatabase`.`country` (`idcountry`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-
-
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Barcelona', '2');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Vic', '2');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Madrid', '2');
-INSERT INTO `mydatabase`.`city` (`city`, `idcountry`) VALUES ('Palma', '2');
-
-
-
-CREATE SCHEMA `countrydb` DEFAULT CHARACTER SET utf8 ;
-use countrydb;
-CREATE TABLE `country` (
-  `idcountry` INT NOT NULL AUTO_INCREMENT,
-  `country` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idcountry`),
-  UNIQUE INDEX `idcountry_UNIQUE` (`idcountry` ASC),
-  UNIQUE INDEX `country_UNIQUE` (`country` ASC));
-
-         * 
-         */
-    }
+    }    
 }
