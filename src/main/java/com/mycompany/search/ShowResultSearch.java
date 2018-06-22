@@ -109,7 +109,7 @@ public class ShowResultSearch extends ShowCities {
             out.println("<a href=\"SearchCountryPaging\" > Повторить поиск </a>");
             out.println("</body>");
             out.println("</html>");
-        }
+        }       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
