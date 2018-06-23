@@ -45,11 +45,23 @@ public class ShowResultSearchAjax extends ShowCities {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String requestDB;
         requestDB=null;//передаваемое в запрос название страны
-            requestDB=request.getParameter("country");//считывание данных запроса
+            requestDB=request.getParameter("id");//считывание данных запроса
             
             if(requestDB==null){
                 requestDB=request.getParameter("requestDB");//считывание данных запроса
-            }      
+            }   
+             //считываем данные из запроса
+        String action = request.getParameter("action");
+        String targetId = request.getParameter("id");//получение из запроса 
+        //скрипта значения поля формы(введенное пользователем значение)
+
+        StringBuffer sb = new StringBuffer();//для временного сохранения строки (для формирования xml)
+
+        //читаем из БД
+        ctr = new CountriesTableReader();
+//            ctr.createdb();
+        
+        countriesList = ctr.readCountries();
         ctr5=new CountriesTableReader();
         
         response.setContentType("text/html;charset=UTF-8");

@@ -63,7 +63,7 @@ function callback() {
         }
     }
 }
-//добавляет страну в таблицу предложений поиска
+//добавляет страну в таблицу вывода
 function appendCountry(name) {
 
     var row;
