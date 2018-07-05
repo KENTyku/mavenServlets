@@ -13,14 +13,25 @@ function init() {
     completeField = document.getElementById("country");//возвращает из 
     //документа ссылку на элемент, который имеет атрибут id с указанным 
     //значением. В нашем случае это поле ввода текса
+    completeIndex=document.getElementById("hiddenIndex");//возвращает из запроса
+    // ссылку на элемент hiddenIndex (для пролистывания формируемого списка городов)
     completeTable = document.getElementById("complete-table");
 //    autoRow = document.getElementById("auto-row");
     completeTable.style.top = getElementY(completeTable) + "px";//выравнивание таблицы
 }
 //запрос на веб-сервер
 function doCompletion() {
-        //формируем строку для запроса к серверу
-        var url = "autocomplete?action=complete&id=" + escape(completeField.value);
+        /**
+         * формируем строку для GET запроса к серверу через сервлет         * 
+         * Url состоит из:
+         * - имени сервлета к которому посылаем запрос
+         * - передаваемого параметра  action (используется при идентификации 
+         * запроса сервлетом)
+         * - передаваемого параметра id
+         * - передаваемого параметра index
+         */
+        var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value)+"&index=" + escape(completeIndex.value);
+//        var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value);
         //создаем объект запроса
         req = initRequest();//метод вызывающий метод (который возвращает объект
         // XMLHttpRequest или ActiveXObject)
@@ -55,16 +66,32 @@ function initRequest() {
 }
 //функция обратного вызова, запускающая обработчик принятого ответа от веб-сервера
 function callback() {
-    clearTable();//любые скомбинированные записи, существующие в окне 
+//    alert("TEST");
+    
+//    clearTable();//любые скомбинированные записи, существующие в окне 
     //автозавершения, удаляются до того, как выполняется заполнение новыми записями.
+//    var i=0;
+//    while(req.readyState !=4) {
+//        console.log(req.readyState);
+//        i++;
+//        if (i==100) break;
+//    }
+//    if (req.readyState == 2) {
+//        console.log(2);
+//    }
+//    if (req.readyState == 3) {
+//        console.log(3);
+//    }
     if (req.readyState == 4) {//состояние объекта XMLHttpRequest нашего запроса=запрос завершен и ответ готов 
+//        alert("req.readyState=4");
         if (req.status == 200) {// код ответа на наш запрос =запрос обработан успешно
+//            alert("req.readyState=4, req.status=200");
             parseMessages(req.responseXML);//парсим полученное в ответ сообщение
         }
     }
 }
 //добавляет страну в таблицу вывода
-function appendCountry(name) {
+function appendCity(name) {
 
     var row;
     var cell;
@@ -109,12 +136,12 @@ function getElementY(element){
 function clearTable() {
     if (completeTable.getElementsByTagName("tr").length > 0) {
         completeTable.style.display = 'none';
-        for (loop = completeTable.childNodes.length -1; loop >= 0 ; loop--) {
-            completeTable.removeChild(completeTable.childNodes[loop]);
+        for (item = completeTable.childNodes.length -1; item >= 0 ; item--) {
+            completeTable.removeChild(completeTable.childNodes[item]);
         }
     }
 }
-//парсинг ответа веб-сервера
+//парсинг xml ответа веб-сервера
 function parseMessages(responseXML) {
 
     // no matches returned
@@ -122,20 +149,25 @@ function parseMessages(responseXML) {
         return false;
     } else {
         
-        //присваиваем перый элемент массива ссылок данного имени, 
-        //найденных во всем документе
-        var countries = responseXML.getElementsByTagName("countries")[0];
+        //присваиваем первый элемент массива ссылок данного имени, 
+        //найденных во всем xml документе
+        var cities = responseXML.getElementsByTagName("cities")[0];
         
-        if (countries.childNodes.length > 0) {
+        if (cities.childNodes.length > 0) {
+            console.log(cities.childNodes.length);
             completeTable.setAttribute("bordercolor", "black");
             completeTable.setAttribute("border", "1");
+//            alert("response added");
 
-            for (loop = 0; loop < countries.childNodes.length; loop++) {
-                var country = countries.childNodes[loop];
-                var name = country.getElementsByTagName("name")[0];
-//                var lastName = country.getElementsByTagName("lastName")[0];
-//                var composerId = country.getElementsByTagName("id")[0];
-                appendCountry(name.childNodes[0].nodeValue);
+            for (var item = 0; item < (cities.childNodes.length); item++) {
+                var city = cities.childNodes[item];
+                var name = city.getElementsByTagName("name")[0];//хранит ссылку на элемент name
+                //добавляем в таблицу html страницы распаресенные данные
+//                alert("TEST");
+//                console.log(cities.childNodes.length);
+                console.log(name.childNodes[0].nodeValue);
+                appendCity(name.childNodes[0].nodeValue);
+//                console.log(1000);
             }
         }
     }
