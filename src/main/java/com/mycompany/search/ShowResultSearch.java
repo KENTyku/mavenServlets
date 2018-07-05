@@ -47,7 +47,8 @@ public class ShowResultSearch extends ShowCities {
             requestDB=request.getParameter("country");//считывание данных запроса
             
             if(requestDB==null){
-                requestDB=request.getParameter("requestDB");//считывание данных запроса
+                requestDB=request.getParameter("requestDB");//считывание данных запроса(используется 
+                //при последующих запросах при пролистывании)
             }      
         ctr5=new CountriesTableReader();
         
