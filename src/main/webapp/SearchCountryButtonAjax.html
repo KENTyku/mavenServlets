@@ -3,7 +3,28 @@
 Use and copying for commercial purposes
 only with the author's permission
 -->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SearchCountryButtonAjax</title>
+        
+        <meta name="viewport" content="text/html">
+        <!-- ссылка на файл javascript.js-->
+        <script type="text/javascript" src="javascript.js"></script>
+    </head>
 
+    <body> <!-- <body onload="init()"> обеспечит выполнение вызова init() при каждой 
+                          загрузке страницы --> 
+        
+        <form  name ="ajaxform" >
+            <input id="country" size="40">           
+            <input type="hidden" id="hiddenIndex" value="0">            
+            <input type="button" value="Поиск" onclick="doCompletion();">            
+        </form>
+        <table id="complete-table" >                            
+        </table>
+    </body>
+</html>
 
 <!--
 Принцип: html-форма при нажатии на кнопку Поиск запускает скрипт,который берет данные
@@ -15,23 +36,3 @@ only with the author's permission
 Далее, предположительно ,скрипт по нажатию сформированных кнопок Назад и Далее 
 осуществляет пролистывание данного списка
 -->
-<html>
-    <head>
-        <title>SearchCountryButtonAjax</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- ссылка на файл javascript.js-->
-        <script type="text/javascript" src="javascript.js"></script>
-    </head>
-
-    <body onload="init()"> <!-- обеспечит выполнение вызова init() при каждой 
-                          загрузке страницы --> 
-        <form  name ="ajaxform" action="ShowResultSearch">
-            <input id="country" size="40">           
-            <input name="index" type="hidden" id="hidden" value="0">            
-            <input type="submit" value="Поиск" onclick="doCompletion();">            
-        </form>
-        <table id="complete-table" >                            
-        </table>
-    </body>
-</html>

@@ -9,46 +9,54 @@ var completeField;//поле ввода символов
 var completeTable;//таблица, выводящая в ответ список стран
 //var autoRow;//строка в которую помещаем таблицу completeTable
 
-function init() {
+//function init() {//нужно попробовать сделать разовой данную функцию а не регулярно выполняющейся
+//    completeField = document.getElementById("country");//возвращает из 
+//    //документа ссылку на элемент, который имеет атрибут id с указанным 
+//    //значением. В нашем случае это поле ввода текса
+//    completeIndex=document.getElementById("hiddenIndex");//возвращает из запроса
+//    // ссылку на элемент hiddenIndex (для пролистывания формируемого списка городов)
+//    completeTable = document.getElementById("complete-table");
+////    autoRow = document.getElementById("auto-row");
+////    completeTable.style.top = getElementY(completeTable) + "px";//выравнивание таблицы
+//}
+//запрос на веб-сервер
+function doCompletion() {
     completeField = document.getElementById("country");//возвращает из 
     //документа ссылку на элемент, который имеет атрибут id с указанным 
     //значением. В нашем случае это поле ввода текса
-    completeIndex=document.getElementById("hiddenIndex");//возвращает из запроса
+    completeIndex = document.getElementById("hiddenIndex");//возвращает из запроса
     // ссылку на элемент hiddenIndex (для пролистывания формируемого списка городов)
     completeTable = document.getElementById("complete-table");
 //    autoRow = document.getElementById("auto-row");
-    completeTable.style.top = getElementY(completeTable) + "px";//выравнивание таблицы
-}
-//запрос на веб-сервер
-function doCompletion() {
-        /**
-         * формируем строку для GET запроса к серверу через сервлет         * 
-         * Url состоит из:
-         * - имени сервлета к которому посылаем запрос
-         * - передаваемого параметра  action (используется при идентификации 
-         * запроса сервлетом)
-         * - передаваемого параметра id
-         * - передаваемого параметра index
-         */
-        var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value)+"&index=" + escape(completeIndex.value);
+//    completeTable.style.top = getElementY(completeTable) + "px";//выравнивание таблицы
+    /**
+     * формируем строку для GET запроса к серверу через сервлет         * 
+     * Url состоит из:
+     * - имени сервлета к которому посылаем запрос
+     * - передаваемого параметра  action (используется при идентификации 
+     * запроса сервлетом)
+     * - передаваемого параметра id
+     * - передаваемого параметра index
+     */
+    var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value) + "&index=" + escape(completeIndex.value);
 //        var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value);
-        //создаем объект запроса
-        req = initRequest();//метод вызывающий метод (который возвращает объект
-        // XMLHttpRequest или ActiveXObject)
-        // 
-        //конфигурируем объект запроса
-        req.open("GET", url, true);//тип запроса, строка адреса, асинхронный запрос
-        /*
-         * Если взаимодействие определено как асинхронное, необходимо указать 
-         * функцию обратного вызова. Функция обратного вызова для этого 
-         * взаимодействия определяется при помощи следующего оператора:        
-         */
-        req.onreadystatechange = callback; //функция обратного вызова callback,
-        // которая будет вызываться при изменении состояния readyState 
-        // объекта XMLHttpRequest нашего подготовленного запроса в процессе 
-        // его дальнейшей отправки    
-        
-        req.send(null);//отсылаем запрос
+    //создаем объект запроса
+    req = initRequest();//метод вызывающий метод (который возвращает объект
+    // XMLHttpRequest или ActiveXObject)
+    // 
+    //конфигурируем объект запроса
+    req.open("GET", url, true);//тип запроса, строка адреса, асинхронный запрос
+    /*
+     * Если взаимодействие определено как асинхронное, необходимо указать 
+     * функцию обратного вызова. Функция обратного вызова для этого 
+     * взаимодействия определяется при помощи следующего оператора:        
+     */
+    req.onreadystatechange = callback; //функция обратного вызова callback,
+    // которая будет вызываться при изменении состояния readyState 
+    // объекта XMLHttpRequest нашего подготовленного запроса в процессе 
+    // его дальнейшей отправки    
+
+    req.send(null);//отсылаем запрос
 }
 // подготовка запроса для адаптации с браузером
 function initRequest() {
@@ -58,7 +66,7 @@ function initRequest() {
             isIE = true;
         }
         return new XMLHttpRequest();//то вызвваем его
-        
+
     } else if (window.ActiveXObject) {//иначе пробуем вызвать метод для MSIE
         isIE = true;
         return new ActiveXObject("Microsoft.XMLHTTP");//и делаем это если это возможно 
@@ -66,22 +74,10 @@ function initRequest() {
 }
 //функция обратного вызова, запускающая обработчик принятого ответа от веб-сервера
 function callback() {
-//    alert("TEST");
-    
-//    clearTable();//любые скомбинированные записи, существующие в окне 
+
+    clearTable();//любые скомбинированные записи, существующие в окне 
     //автозавершения, удаляются до того, как выполняется заполнение новыми записями.
-//    var i=0;
-//    while(req.readyState !=4) {
-//        console.log(req.readyState);
-//        i++;
-//        if (i==100) break;
-//    }
-//    if (req.readyState == 2) {
-//        console.log(2);
-//    }
-//    if (req.readyState == 3) {
-//        console.log(3);
-//    }
+
     if (req.readyState == 4) {//состояние объекта XMLHttpRequest нашего запроса=запрос завершен и ответ готов 
 //        alert("req.readyState=4");
         if (req.status == 200) {// код ответа на наш запрос =запрос обработан успешно
@@ -113,12 +109,12 @@ function appendCity(name) {
 
     linkElement = document.createElement("a");
     linkElement.className = "popupItem";
-    linkElement.setAttribute("href", "autocomplete?action=lookup&id=" );
+    linkElement.setAttribute("href", "autocomplete?action=lookup&id=");
     linkElement.appendChild(document.createTextNode(name));
     cell.appendChild(linkElement);
 }
 //для выравнивания таблицы предложений
-function getElementY(element){
+function getElementY(element) {
 
     var targetTop = 0;
 
@@ -134,9 +130,10 @@ function getElementY(element){
 }
 //очистка таблицы предложений поиска
 function clearTable() {
+    console.log("log:"+completeTable.getElementsByTagName("tr").length);
     if (completeTable.getElementsByTagName("tr").length > 0) {
-        completeTable.style.display = 'none';
-        for (item = completeTable.childNodes.length -1; item >= 0 ; item--) {
+//        completeTable.style.display = 'none';
+        for (var item = completeTable.childNodes.length - 1; item >= 0; item--) {
             completeTable.removeChild(completeTable.childNodes[item]);
         }
     }
@@ -148,11 +145,11 @@ function parseMessages(responseXML) {
     if (responseXML == null) {
         return false;
     } else {
-        
+
         //присваиваем первый элемент массива ссылок данного имени, 
         //найденных во всем xml документе
         var cities = responseXML.getElementsByTagName("cities")[0];
-        
+
         if (cities.childNodes.length > 0) {
             console.log(cities.childNodes.length);
             completeTable.setAttribute("bordercolor", "black");
