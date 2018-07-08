@@ -86,14 +86,14 @@ public class ShowResultSearchAjax extends ShowCities {
 
             // проверяем что запрос не пустой
             if (!requestDB.equals("")) {
-
+                    
                 //подготавливаем xml данные
                 for (City itemcity : cities) {
                     sb.append("<city>");//                      
                     sb.append("<name>" + itemcity.getNameCity() + "</name>");//                       ;
-                    sb.append("</city>");
+                    sb.append("</city>");                    
                     requestAdded = true;
-                }
+                }                
             }
 
             if (requestAdded) {
