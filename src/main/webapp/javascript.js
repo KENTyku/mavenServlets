@@ -7,7 +7,17 @@ var req;
 var isIE;
 var completeField;//поле ввода символов
 var completeTable;//таблица, выводящая в ответ список стран
+
+var pagingTable;//таблица для отрисовывания кнопок вперед назад и фразы что запрашиваемых данных нет
+var rowPaging;//создали строку
+var cellNextPaging;//ячейка для кнопки Вперёд
+var cellBackPaging;//ячейка для кнопки Назад
+var cellInfoPaging;//ячейка для вывода информации
+        
+var sizecitieslist; //количество городов полученных из ответа на запрос в БД
+var index=0;//значение смещения количества элементов в запросе к БД
 //var autoRow;//строка в которую помещаем таблицу completeTable
+
 
 //function init() {//нужно попробовать сделать разовой данную функцию а не регулярно выполняющейся
 //    completeField = document.getElementById("country");//возвращает из 
@@ -29,6 +39,8 @@ function doCompletion() {
     completeTable = document.getElementById("complete-table");
 //    autoRow = document.getElementById("auto-row");
 //    completeTable.style.top = getElementY(completeTable) + "px";//выравнивание таблицы
+    pagingTable=document.getElementById("paging-table");
+    
     /**
      * формируем строку для GET запроса к серверу через сервлет         * 
      * Url состоит из:
@@ -38,7 +50,7 @@ function doCompletion() {
      * - передаваемого параметра id
      * - передаваемого параметра index
      */
-    var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value) + "&index=" + escape(completeIndex.value);
+    var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value) + "&index=" + index;
 //        var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value);
     //создаем объект запроса
     req = initRequest();//метод вызывающий метод (который возвращает объект
@@ -91,7 +103,7 @@ function appendCity(name) {
 
     var row;
     var cell;
-    var linkElement;
+    var textelement;
 
     if (isIE) {
         completeTable.style.display = 'block';
@@ -107,11 +119,12 @@ function appendCity(name) {
 
     cell.className = "popupCell";
 
-    linkElement = document.createElement("a");
-    linkElement.className = "popupItem";
-    linkElement.setAttribute("href", "autocomplete?action=lookup&id=");
-    linkElement.appendChild(document.createTextNode(name));
-    cell.appendChild(linkElement);
+    textelement = document.createElement("h7");
+    textelement.className = "popupItem";
+//    linkElement.setAttribute("href", "autocomplete?action=lookup&id=");
+    textelement.appendChild(document.createTextNode(name));
+    cell.appendChild(textelement);
+    
 }
 //для выравнивания таблицы предложений
 function getElementY(element) {
@@ -149,16 +162,20 @@ function parseMessages(responseXML) {
         //присваиваем первый элемент массива ссылок данного имени, 
         //найденных во всем xml документе
         var cities = responseXML.getElementsByTagName("cities")[0];
-
+        sizecitieslist=cities.childNodes.length;
         if (cities.childNodes.length > 0) {
-            console.log(cities.childNodes.length);
+//            console.log(cities.childNodes.length);
             completeTable.setAttribute("bordercolor", "black");
             completeTable.setAttribute("border", "1");
+            completeTable.setAttribute("cellspacing","0");
 //            alert("response added");
+            
+//            console.log("size="+sizecitieslist);
 
             for (var item = 0; item < (cities.childNodes.length); item++) {
                 var city = cities.childNodes[item];
                 var name = city.getElementsByTagName("name")[0];//хранит ссылку на элемент name
+                
                 //добавляем в таблицу html страницы распаресенные данные
 //                alert("TEST");
 //                console.log(cities.childNodes.length);
@@ -166,6 +183,56 @@ function parseMessages(responseXML) {
                 appendCity(name.childNodes[0].nodeValue);
 //                console.log(1000);
             }
+            //создаем таблицу для вставки кнопок вперед назад и информации что данные отсутствуют
+            rowPaging=document.createElement("tr");//создали строку
+            cellNextPaging=document.createElement("td");
+            cellBackPaging=document.createElement("td");
+            cellInfoPaging=document.createElement("td");
+            rowPaging.appendChild(cellBackPaging);
+            rowPaging.appendChild(cellInfoPaging);
+            rowPaging.appendChild(cellNextPaging);
+            pagingTable.appendChild(rowPaging);
+            
+//            var textButtonNext=document.createTextNode("Вперёд");
+            
+            if (sizecitieslist>4) {
+                addButtonNext();
+            }
+            if(index>0){
+                addButtonBack();
+            }
+            
+        }
+        if ((index==0)&&(sizecitieslist<=0)){
+            noData();
         }
     }
+}
+
+function addButtonNext() {
+    //<input type="button" value="Поиск" onclick="clickButtonNext();">
+    var buttonNext=document.createElement("input");
+    buttonNext.setAttribute("type","button");
+    buttonNext.setAttribute("value","Вперёд");
+    buttonNext.setAttribute("onclick","clickButtonNext()");
+    cellNextPaging.appendChild(buttonNext);
+    //добавляем кнопку Вперед в правой части страницы
+}
+function clickButtonNext() {
+    index=index+5;
+    doCompletion();    
+}
+
+function addButtonBack() {
+    //<input type="button" value="Поиск" onclick="clickButtonBack();">
+    //добавляем кнопку Назад в левой части страницы
+}
+function clickButtonBack() {
+    index=index-5;
+    doCompletion();    
+}
+
+function noData() {
+    //<a href=\"SearchCountryPaging\" > Повторить поиск </a>
+    //добавляем фразу "БД нет данных по запросу"
 }
