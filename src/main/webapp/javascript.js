@@ -185,11 +185,12 @@ function parseMessages(responseXML) {
 //                console.log(1000);
             }
             //создаем таблицу для вставки кнопок вперед назад и информации что данные отсутствуют
-            console.log(rowPaging);
-            if (rowPaging == null)               
+//            console.log(rowPaging);
+            if (rowPaging == null)
             {
                 rowPaging = document.createElement("tr");//создали строку
                 cellNextPaging = document.createElement("td");
+                cellNextPaging.id = "cellNextPaging";
                 cellBackPaging = document.createElement("td");
                 cellInfoPaging = document.createElement("td");
 
@@ -198,16 +199,14 @@ function parseMessages(responseXML) {
                 rowPaging.appendChild(cellNextPaging);
                 pagingTable.appendChild(rowPaging);
             }
-
-
 //            var textButtonNext=document.createTextNode("Вперёд");
 
-            if (sizecitieslist > 4) {
-                addButtonNext();
-            }
-            if (index > 0) {
-                addButtonBack();
-            }
+            if (sizecitieslist > 4) addButtonNext();
+            else deleteButtonNext();
+            console.log("index="+index);
+            
+            if (index > 0)addButtonBack();
+            else deleteButtonBack();
 
         }
         if ((index == 0) && (sizecitieslist <= 0)) {
@@ -219,31 +218,51 @@ function parseMessages(responseXML) {
 function addButtonNext() {
     //добавляем кнопку Вперед в правой части страницы
     var buttonNext = document.createElement("input");
+    buttonNext.id = "buttonNext";
     buttonNext.setAttribute("type", "button");
     buttonNext.setAttribute("value", "Вперёд");
     buttonNext.setAttribute("onclick", "clickButtonNext()");
-    console.log(cellNextPaging.get);
-    if (cellNextPaging.lastChild)cellNextPaging.replaceChild(buttonNext,buttonNext);
-    else cellNextPaging.appendChild(buttonNext);
-//    if (sizecitieslist<5) buttonNext.setAttribute("hidden","hidden");
-//    else buttonNext.setAttribute("hidden","");
-
+//    console.log(cellNextPaging.get);
+    if (cellNextPaging.lastChild){
+        var oldbutton=document.getElementById("buttonNext");
+        cellNextPaging.replaceChild(buttonNext, oldbutton);
+    }
+    else
+        cellNextPaging.appendChild(buttonNext);
+//    console.log("sizecitieslist=" + sizecitieslist);
+}
+function deleteButtonNext() {
+//    console.log("sizecitieslist=" + sizecitieslist);
+    if (cellNextPaging.lastChild){
+        var removebutton=document.getElementById("buttonNext");
+        cellNextPaging.removeChild(removebutton); 
+    }  
 }
 function clickButtonNext() {
     index = index + 5;
     doCompletion();
 }
 
-function addButtonBack() {
-    //<input type="button" value="Поиск" onclick="clickButtonBack();">
+function addButtonBack() { 
     //добавляем кнопку Назад в левой части страницы
     var buttonBack = document.createElement("input");
+    buttonBack.id="buttonBack";
     buttonBack.setAttribute("type", "button");
     buttonBack.setAttribute("value", "Назад");
     buttonBack.setAttribute("onclick", "clickButtonBack()");
-    if (cellBackPaging.lastChild)cellBackPaging.replaceChild(buttonBack,buttonBack);
-    else cellBackPaging.appendChild(buttonBack);
+    if (cellBackPaging.lastChild)
+        cellBackPaging.replaceChild(buttonBack, buttonBack);
+    else
+        cellBackPaging.appendChild(buttonBack);
 }
+
+function deleteButtonBack(){
+    if (cellBackPaging.lastChild){
+        var removebutton=document.getElementById("buttonBack");
+        cellBackPaging.removeChild(removebutton); 
+    }
+}
+
 function clickButtonBack() {
     index = index - 5;
     doCompletion();
