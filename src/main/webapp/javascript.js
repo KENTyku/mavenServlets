@@ -222,8 +222,11 @@ function addButtonNext() {
     buttonNext.setAttribute("type", "button");
     buttonNext.setAttribute("value", "Вперёд");
     buttonNext.setAttribute("onclick", "clickButtonNext()");
-    if (rowPaging!=null)cellNextPaging.replaceChild(buttonNext);
+    console.log(cellNextPaging.get);
+    if (cellNextPaging.lastChild)cellNextPaging.replaceChild(buttonNext,buttonNext);
     else cellNextPaging.appendChild(buttonNext);
+//    if (sizecitieslist<5) buttonNext.setAttribute("hidden","hidden");
+//    else buttonNext.setAttribute("hidden","");
 
 }
 function clickButtonNext() {
@@ -238,7 +241,7 @@ function addButtonBack() {
     buttonBack.setAttribute("type", "button");
     buttonBack.setAttribute("value", "Назад");
     buttonBack.setAttribute("onclick", "clickButtonBack()");
-    if (rowPaging!=null)cellBackPaging.replaceChild(buttonBack);
+    if (cellBackPaging.lastChild)cellBackPaging.replaceChild(buttonBack,buttonBack);
     else cellBackPaging.appendChild(buttonBack);
 }
 function clickButtonBack() {
