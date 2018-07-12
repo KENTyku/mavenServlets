@@ -14,12 +14,8 @@ var cellNextPaging;//ячейка для кнопки Вперёд
 var cellBackPaging;//ячейка для кнопки Назад
 var cellInfoPaging;//ячейка для вывода информации
 var replase;//утверждение о том что создана таблица для пейджинга 
-
-var sizecitieslist; //количество городов полученных из ответа на запрос в БД
+var sizecitieslist=0; //количество городов полученных из ответа на запрос в БД
 var index = 0;//значение смещения количества элементов в запросе к БД
-//var autoRow;//строка в которую помещаем таблицу completeTable
-
-
 //function init() {//нужно попробовать сделать разовой данную функцию а не регулярно выполняющейся
 //    completeField = document.getElementById("country");//возвращает из 
 //    //документа ссылку на элемент, который имеет атрибут id с указанным 
@@ -30,6 +26,7 @@ var index = 0;//значение смещения количества элем�
 ////    autoRow = document.getElementById("auto-row");
 ////    completeTable.style.top = getElementY(completeTable) + "px";//выравнивание таблицы
 //}
+
 //запрос на веб-сервер
 function doCompletion() {
     completeField = document.getElementById("country");//возвращает из 
@@ -51,8 +48,9 @@ function doCompletion() {
      * - передаваемого параметра id
      * - передаваемого параметра index
      */
-    var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value) + "&index=" + index;
-//        var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + escape(completeField.value);
+    var url = "ShowResultSearchAjaxServlet?action=requestComplete&id=" + encodeURIComponent(completeField.value) + "&index=" + index;
+//    при формировании запроса русские буквы подготавливаем с помощью encodeURIComponent()
+      
     //создаем объект запроса
     req = initRequest();//метод вызывающий метод (который возвращает объект
     // XMLHttpRequest или ActiveXObject)
@@ -90,18 +88,19 @@ function callback() {
 
     clearTable();//любые скомбинированные записи, существующие в окне 
     //автозавершения, удаляются до того, как выполняется заполнение новыми записями.
-
+    
     if (req.readyState == 4) {//состояние объекта XMLHttpRequest нашего запроса=запрос завершен и ответ готов 
-//        alert("req.readyState=4");
         if (req.status == 200) {// код ответа на наш запрос =запрос обработан успешно
-//            alert("req.readyState=4, req.status=200");
             parseMessages(req.responseXML);//парсим полученное в ответ сообщение
+        }
+        if(req.status==204) {//если ответ не содержит данных(пустой)
+            parseMessages(req.responseXML);//можно подумать над тем что сделать отдельную функцию для пустого ответа
         }
     }
 }
+
 //добавляет страну в таблицу вывода
 function appendCity(name) {
-
     var row;
     var cell;
     var textelement;
@@ -117,48 +116,47 @@ function appendCity(name) {
         row.appendChild(cell);
         completeTable.appendChild(row);
     }
-
     cell.className = "popupCell";
-
     textelement = document.createElement("h7");
     textelement.className = "popupItem";
-//    linkElement.setAttribute("href", "autocomplete?action=lookup&id=");
     textelement.appendChild(document.createTextNode(name));
     cell.appendChild(textelement);
-
 }
-//для выравнивания таблицы предложений
-function getElementY(element) {
 
-    var targetTop = 0;
-
-    if (element.offsetParent) {
-        while (element.offsetParent) {
-            targetTop += element.offsetTop;
-            element = element.offsetParent;
-        }
-    } else if (element.y) {
-        targetTop += element.y;
-    }
-    return targetTop;
-}
 //очистка таблицы предложений поиска
 function clearTable() {
-//    console.log("log:"+completeTable.getElementsByTagName("tr").length);
-    if (completeTable.getElementsByTagName("tr").length > 0) {
-//        completeTable.style.display = 'none';
+    if (completeTable.getElementsByTagName("tr").length > 0) {//проверка на наличие элементов
         for (var item = completeTable.childNodes.length - 1; item >= 0; item--) {
-            completeTable.removeChild(completeTable.childNodes[item]);
+            completeTable.removeChild(completeTable.childNodes[item]);//удаление поэлементное
         }
+    }
+    if (pagingTable.getElementsByTagName("td").length>0){//проверка на наличие элементов
+        for (var item=pagingTable.childNodes.length-1;item>=0;item--){
+            pagingTable.removeChild(pagingTable.childNodes[item]);
+        }
+        rowPaging=null;//для удаления строки в таблице pagingTable
     }
 }
 //парсинг xml ответа веб-сервера
 function parseMessages(responseXML) {
+console.log(responseXML);
+//создаем таблицу для вставки кнопок вперед назад и информации что данные отсутствуют
+//            console.log(rowPaging);
+            if (rowPaging == null)
+            {
+                rowPaging = document.createElement("tr");//создали строку
+                cellNextPaging = document.createElement("td");
+                cellNextPaging.id = "cellNextPaging";
+                cellBackPaging = document.createElement("td");
+                cellInfoPaging = document.createElement("td");
 
-    // no matches returned
-    if (responseXML == null) {
-        return false;
-    } else {
+                rowPaging.appendChild(cellBackPaging);
+                rowPaging.appendChild(cellInfoPaging);
+                rowPaging.appendChild(cellNextPaging);
+                pagingTable.appendChild(rowPaging);
+            }
+    
+    if (responseXML != null) {
 
         //присваиваем первый элемент массива ссылок данного имени, 
         //найденных во всем xml документе
@@ -184,21 +182,7 @@ function parseMessages(responseXML) {
                 appendCity(name.childNodes[0].nodeValue);
 //                console.log(1000);
             }
-            //создаем таблицу для вставки кнопок вперед назад и информации что данные отсутствуют
-//            console.log(rowPaging);
-            if (rowPaging == null)
-            {
-                rowPaging = document.createElement("tr");//создали строку
-                cellNextPaging = document.createElement("td");
-                cellNextPaging.id = "cellNextPaging";
-                cellBackPaging = document.createElement("td");
-                cellInfoPaging = document.createElement("td");
-
-                rowPaging.appendChild(cellBackPaging);
-                rowPaging.appendChild(cellInfoPaging);
-                rowPaging.appendChild(cellNextPaging);
-                pagingTable.appendChild(rowPaging);
-            }
+            
 //            var textButtonNext=document.createTextNode("Вперёд");
 
             if (sizecitieslist > 4) addButtonNext();
@@ -209,9 +193,14 @@ function parseMessages(responseXML) {
             else deleteButtonBack();
 
         }
-        if ((index == 0) && (sizecitieslist <= 0)) {
-            noData();
-        }
+//        if ((index == 0) && (sizecitieslist <= 0)) {
+//            console.log("TEST1111");
+//            addNoData();
+//        }
+    }
+    else{
+        console.log("111111");
+            addNoData();
     }
 }
 
@@ -268,7 +257,16 @@ function clickButtonBack() {
     doCompletion();
 }
 
-function noData() {
-    //<a href=\"SearchCountryPaging\" > Повторить поиск </a>
+function addNoData() {
+    console.log("sizesl="+sizecitieslist);
+    var elementNoData=document.createElement("h4");
+    var textNoData=document.createTextNode("В базе нет данных по вашему запросу. Измените запрос.");
+    //<a href=\"SearchCountryPaging\" > Повторить поиск </a> if (cellNextPaging.lastChild){
+      if (cellInfoPaging.lastChild){
+//        var oldbutton=document.getElementById("buttonNext");
+//        cellInfoPaging.replaceChild(buttonNext, oldbutton);
+    }
+    else
+        cellInfoPaging.appendChild(elementNoData.appendChild(textNoData));
     //добавляем фразу "БД нет данных по запросу"
 }
