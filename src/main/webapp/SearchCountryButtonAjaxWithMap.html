@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+Use and copying for commercial purposes
+only with the author's permission
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SearchCountryButtonAjax</title>
+
+        <meta name="viewport" content="text/html">
+        <!-- ссылка на файл javascript.js-->
+        <script type="text/javascript" src="javascript.js"></script>
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript">
+        </script>
+
+        <script type="text/javascript">
+            ymaps.ready(init);
+            
+            function init() {
+                var myGeocoder = ymaps.geocode("Ижевск");
+                
+                myGeocoder.then(
+                        function (res) {
+                            alert('Координаты объекта :' + res.geoObjects.get(0).geometry.getCoordinates());
+                        },
+                        function (err) {
+                            alert('Ошибка');
+                        }
+                );
+                var myMap = new ymaps.Map("map", {
+                    center: [56.853130774279585, 53.212366085619806],
+                    zoom: 17
+                });
+
+                var myPlacemark = new ymaps.Placemark([56.85291327990832, 53.210402708620926], {
+                    hintContent: 'Информация об объекте',
+                    balloonContent: 'Площадь Ижевска'
+                });
+
+                myMap.geoObjects.add(myPlacemark);
+            }
+
+
+        </script>
+    </head>
+
+    <body> <!-- <body onload="init()"> обеспечит выполнение вызова init() при каждой 
+                          загрузке страницы --> 
+
+        <form  name ="ajaxform" >
+            <input id="country" size="40">           
+            <input type="hidden" id="hiddenIndex" value="0">            
+            <input type="button" value="Поиск" onclick="doCompletion();">            
+        </form>
+
+        <br>
+        <table id="complete-table" >                            
+        </table>
+        <br>
+        <table id="paging-table" >                            
+        </table>
+        <div id="map" style="width: 600px; height: 400px">
+
+        </div>
+    </body>
+</html>
+
+<!--
+Принцип: html-форма при нажатии на кнопку Поиск запускает скрипт,который берет данные
+из формы, формирует запрос к веб серверу TomCat на сервлет. Сервлет получает данные
+из запроса на основании этих данных запускает методы доступа к БД получет данные из БД
+формирует xml ответ(Список городов запрошенной страны/стран). 
+Скрипт той же html-формы распознает этот ответ  Парсит его и на основании 
+полученных данных формирует дополнительные данные на страничке формы.
+Далее, предположительно ,скрипт по нажатию сформированных кнопок Назад и Далее 
+осуществляет пролистывание данного списка
+-->
