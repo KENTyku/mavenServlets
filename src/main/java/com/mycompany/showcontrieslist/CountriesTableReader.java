@@ -188,8 +188,8 @@ public class CountriesTableReader {
                 загруженных классов, а не пытается загрузить их сам.
              */
 //                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mdb?useSSL=no&serverTimezone=UTC","root","123456");
-//                connection = DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7241881?useSSL=no&serverTimezone=UTC","sql7241881","t81rKv5i19");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sql7241881?useSSL=no&serverTimezone=UTC", "root", "123456");
+                connection = DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7251503?useSSL=no&serverTimezone=UTC","sql7251503","1Jx7N5vPQS");
+//            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase?useSSL=no&serverTimezone=UTC", "root", "123456");
             stmt = connection.createStatement();
         } catch (SQLException ex) {
             System.out.println(ex);
