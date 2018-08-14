@@ -16,32 +16,31 @@ only with the author's permission
 
         <script type="text/javascript">
             ymaps.ready(init);
-            
             function init() {
-                var myGeocoder = ymaps.geocode("Ижевск");
-                
+                //делаем запрос по имени
+                var myGeocoder = ymaps.geocode("Рязань", {results: 1});
+                //обработка ответа, когда получен результат
                 myGeocoder.then(
                         function (res) {
-                            alert('Координаты объекта :' + res.geoObjects.get(0).geometry.getCoordinates());
-                        },
-                        function (err) {
-                            alert('Ошибка');
+                            //возвращаем координаты из ответа
+                            var coord = res.geoObjects.get(0).geometry.getCoordinates();
+                            //формируем карту
+                            var myMap = new ymaps.Map("map", {
+                                center: coord,
+                                zoom: 10
+                            });
+                            //создаем метку с координатами найденной точки
+                            var myPlacemark = new ymaps.Placemark(coord, {
+                                hintContent: 'Информация об объекте',
+                                balloonContent: 'Искомый объект'
+                            });
+                            //добавляем метку на карту
+                            myMap.geoObjects.add(myPlacemark);
+
                         }
                 );
-                var myMap = new ymaps.Map("map", {
-                    center: [56.853130774279585, 53.212366085619806],
-                    zoom: 17
-                });
 
-                var myPlacemark = new ymaps.Placemark([56.85291327990832, 53.210402708620926], {
-                    hintContent: 'Информация об объекте',
-                    balloonContent: 'Площадь Ижевска'
-                });
-
-                myMap.geoObjects.add(myPlacemark);
             }
-
-
         </script>
     </head>
 
